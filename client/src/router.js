@@ -1,13 +1,13 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import FilterBasic from './screens/FilterBasic'
+import applicantDetail from './components/applicantDetail'
 
 
 Vue.use(VueRouter)
 
 const routes = [
-    {path:'/' ,name:'filterBasic',component:FilterBasic},
-    
+  { path: '/', name: 'applicantDetail', component: applicantDetail },
+
 ]
 
 const router = new VueRouter({
