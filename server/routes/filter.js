@@ -8,7 +8,7 @@ router.get('/alldata',async (req,res)=>{
         await client.query("BEGIN");
     
    
-     await client.query(`SELECT *
+     await client.query(`SELECT *,CAST(applicant_iteration_master.dob AS char(10)) AS dob
      FROM applicant_iteration_master
      LEFT JOIN application_status_audit
      ON applicant_iteration_master.id = application_status_audit.user_id;`,(error,result)=>{
