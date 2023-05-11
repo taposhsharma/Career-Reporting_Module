@@ -46,19 +46,11 @@
       <div v-if="age" class="div" >
         <div>
           <label for="min-age">Min age:</label>
-          <select id="age">
-            <option v-for="option in ageOptions" :value="option" :key="option">
-              {{ option }}
-            </option>
-          </select>
+          <input type="number" id="min-age">
         </div>
         <div>
           <label for="max-age">Max Age:</label>
-          <select id="age">
-            <option v-for="option in ageOptions" :value="option" :key="option">
-              {{ option }}
-            </option>
-          </select>
+          <input type="number" id="max-age">
         </div>
         <br>
       </div>
@@ -148,7 +140,8 @@ export default {
 
 .div {
   display: flex;
-  width: 200px;
+  /* align-content: center; */
+  /* width: 200px; */
   margin-bottom: 10px;
 }
 
