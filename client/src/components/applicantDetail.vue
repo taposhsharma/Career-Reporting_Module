@@ -1,7 +1,7 @@
 <template>
   <div class="main">
     <div class="nav">
-      <h2>Applicants List</h2>
+      <h2>APPLICANTS LIST</h2>
     </div>
     <div class="filterBox" v-show="filterBox"><filterComponent @close="closeFilters()"></filterComponent></div>
     <div class="operations">
