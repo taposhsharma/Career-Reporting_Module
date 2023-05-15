@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const client = require('../connection/db')
 
+
 router.get('/alldata',async (req,res)=>{
        try {
         
@@ -131,5 +132,15 @@ router.get('/getMaxExperience', async (req, res) => {
   }
 });
 
+//filter data with data validation
+router.post("/filterData" , async (req,res )=>{
+  const data = req.body
+ 
+
+  res.status(200).send("result");
+    
+  
+
+})
 
 module.exports = router
