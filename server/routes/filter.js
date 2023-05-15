@@ -88,6 +88,7 @@ router.get('/getCity', async (req, res) => {
 router.get('/getState', async (req, res) => {
   try{
     const queryState = `SELECT DISTINCT state AS state from applicant_iteration_master GROUP BY state`;
+    console.log('hi')
     await client.query('BEGIN');
     await client.query(queryState, (error, result) => {
       if(error)
