@@ -37,31 +37,6 @@
           <filterComponent />
         </div>
       </div>
-
-    <div class="details">
-      <!-- <table>
-        <tr>
-          <th>Name</th>
-          <th>Position</th>
-          <th>Exprience</th>
-          <th>Relevant Experience</th>
-          <th>Application Status</th>
-          <th>Email</th>
-          <th>Mobile</th>
-          <th>DOB</th>
-        </tr>
-        <tr v-for="applicant in applicants" :key="applicant.id">
-          <td>{{ applicant.first_name }} {{ applicant.last_name }}</td>
-          <td>{{ applicant.position }}</td>
-          <td>{{ applicant.experience }}</td>
-          <td>{{ applicant.relevant_experience }}</td>
-          <td>{{ applicant.status }}</td>
-          <td>{{ applicant.email }}</td>
-          <td>{{ applicant.mobile_no }}</td>
-          <td>{{ applicant.dob }}</td>
-        </tr>
-      </table> -->
-          </div>
       <table class="table table-striped">
   <thead>
     <tr>
@@ -157,9 +132,6 @@ export default {
 .operations input {
   width: 55%;
 }
-.details{
-  margin: 10px;
-}
 table {
   margin: 0 auto;
 }
@@ -172,6 +144,10 @@ td {
   border: 1px solid black;
   border-collapse: collapse;
 } */
+.card{
+  margin: auto;
+  width: 55%;
+}
 .filterBox {
   position: absolute;
   width: 50%;

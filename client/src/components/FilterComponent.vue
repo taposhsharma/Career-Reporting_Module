@@ -1,37 +1,40 @@
 <template>
   <div class="filter">
     <ul>
-      <li><button @click="experience = !experience">Experience</button></li>
-      <div v-if="experience" class="div">
-        <div>
-          <label for="min-experience">Min Experience:</label>
-          <select id="experience">
-            <option v-for="option in experienceOptions" :value="option" :key="option">
-              {{ option }}
-            </option>
-          </select>
-        </div>
-        <div>
-          <label for="max-experience">Max Experience:</label>
-          <select id="experience">
-            <option v-for="option in experienceOptions" :value="option" :key="option">
-              {{ option }}
-            </option>
-          </select>
+      <!-- <li><button @click="experience = !experience">Experience</button></li> -->
+      <li>
+      <div class="div">
+        <label id="experience">Experience:</label> &nbsp; 
+        <div class="experience">     
+          <input type="number" v-model="rangeExperience[0]">&nbsp;
+          <input type="number" v-model="rangeExperience[1]">
+          </div>
         </div>
         <br>
-      </div>
-      
-      <li><button @click="position = !position">Position</button></li>
-      <div v-if="position" class="div">
-          <!-- <label for="position">Position:</label> -->
+      <vue-slider v-model="rangeExperience" :min="0" :max="100"></vue-slider>
+      </li>
+      <!-- <li><button @click="position = !position">Position</button></li> -->
+      <!-- <div v-if="position" class="div">
+          <label for="position">Position:</label>
           <select v-model="selectedTech" multiple size="4">
             <option v-for="option in Array.from(new Set(this.posOptions))" :value="option" :key="option">
               {{ option }}
             </option>
           </select>
-        </div>
-
+        </div> -->
+        <div class="dropdown">
+  <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
+    Position
+  </button>
+  <div class="dropdown-menu">
+    <select v-model="selectedTech" multiple size="4">
+            <option v-for="option in Array.from(new Set(this.posOptions))" :value="option" :key="option">
+              {{ option }}
+            </option>
+          </select>
+  </div>
+</div>
+<br>
       <li><button @click="gender = !gender">Gender</button></li>
       <div v-if="gender" class="div">
           <label for="gender">Gender:</label>
@@ -42,18 +45,17 @@
           </select>
         </div>
 
-      <li><button @click="age = !age">Age</button></li>
-      <div v-if="age" class="div" >
-        <div>
-          <label for="min-age">Min age:</label>
-          <input type="number" id="min-age">
-        </div>
-        <div>
-          <label for="max-age">Max Age:</label>
-          <input type="number" id="max-age">
+      <li>
+      <div class="div" >
+        <label id="age">Age:</label>&nbsp;
+        <div class="experience">
+          <input type="number" id="min-age" v-model="rangeAge[0]">&nbsp;
+          <input type="number" id="max-age" v-model="rangeAge[1]">
         </div>
         <br>
       </div>
+      </li>
+      <vue-slider v-model="rangeAge" :min="0" :max="100"></vue-slider>
       
       <li><button @click="location = !location">Location</button></li>
       <div v-if="location" class="div">
@@ -74,10 +76,17 @@
 
 <script>
 import axios from 'axios';
+import VueSlider from 'vue-slider-component';
+import 'vue-slider-component/theme/default.css';
 export default {
   name: "FilterComponent",
+  components:{
+    VueSlider
+  },
   data() {
     return {
+      rangeExperience: [25, 75],
+      rangeAge: [25, 75],
       experience: false,
       age: false,
       position: false,
@@ -118,6 +127,7 @@ export default {
 <style scoped>
 .filter {
   margin: auto;
+  width: 100%;
   background-color: #f5f5f5;
   /* width: 200px; */
   box-shadow: 0px 2px 4px #888;
@@ -144,6 +154,9 @@ export default {
   /* width: 200px; */
   margin-bottom: 10px;
 }
+.experience{
+  right: 0px;
+}
 
 input {
   width: 50px;
@@ -153,4 +166,5 @@ input {
     background-color: grey;
     cursor: pointer;
 }
+
 </style>
