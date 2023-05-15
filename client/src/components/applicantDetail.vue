@@ -6,8 +6,8 @@
     <div class="filterBox" v-show="filterBox"><filterComponent @close="closeFilters()"></filterComponent></div>
     <div class="operations">
       <input type="text" />
-      <button>Search</button>
-      <button @click="openFilters">Filters</button>
+      <button >Search</button>
+      <button  @click="openFilters">Filters</button>
     </div>
     <div class="details">
       <table>
@@ -72,6 +72,9 @@ export default {
 </script>
 
 <style scoped>
+.main{
+  user-select: none;
+}
 .nav {
   display: flex;
   align-items: center;
