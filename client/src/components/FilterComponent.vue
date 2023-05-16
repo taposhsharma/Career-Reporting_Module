@@ -1,8 +1,6 @@
 <template>
   <div class="filter">
-    <ul>
       <!-- <li><button @click="experience = !experience">Experience</button></li> -->
-      <li>
       <div class="div">
         <label id="experience">Experience:</label> &nbsp; 
         <div class="experience">     
@@ -12,7 +10,6 @@
         </div>
         <br>
       <vue-slider v-model="rangeExperience" :min="0" :max="100"></vue-slider>
-      </li>
       <!-- <li><button @click="position = !position">Position</button></li> -->
       <!-- <div v-if="position" class="div">
           <label for="position">Position:</label>
@@ -22,7 +19,7 @@
             </option>
           </select>
         </div> -->
-        <div class="dropdown">
+        <!-- <div class="dropdown">
   <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
     Position
   </button>
@@ -33,9 +30,39 @@
             </option>
           </select>
   </div>
-</div>
+</div> -->
+<!-- <b-dropdown v-model="selectedPos" toggle-class="btn-primary" no-close-on-select>
+      <template v-slot:button-content>
+        <span>Selected items: {{ selectedPos.length }}</span>
+      </template>
+      <b-dropdown-item v-for="item in Array.from(new Set(this.posOptions))" :key="item" @click="toggleItem(item)">
+        {{ item }}
+      </b-dropdown-item>
+    </b-dropdown> -->
+    
+    <div class="dropdown">
+      <button
+        class="btn btn-primary dropdown-toggle"
+        type="button"
+        @click="toggleDropdownPos"
+        aria-haspopup="true"
+        aria-expanded="isDropdownOpenPos"
+      >
+        Selected items: {{ selectedPos.length }}
+      </button>
+      <div class="dropdown-menu" :class="{ show: isDropdownOpenPos }">
+        <a
+          v-for="item in Array.from(new Set(this.posOptions))"
+          :key="item"
+          class="dropdown-item"
+          @click="toggleItem(item)"
+        >
+          {{ item }}
+        </a>
+      </div>
+    </div>
 <br>
-      <li><button @click="gender = !gender">Gender</button></li>
+      <button @click="gender = !gender">Gender</button>
       <div v-if="gender" class="div">
           <label for="gender">Gender:</label>
           <select id="gender">
@@ -45,7 +72,6 @@
           </select>
         </div>
 
-      <li>
       <div class="div" >
         <label id="age">Age:</label>&nbsp;
         <div class="experience">
@@ -54,19 +80,21 @@
         </div>
         <br>
       </div>
-      </li>
       <vue-slider v-model="rangeAge" :min="0" :max="100"></vue-slider>
       
-      <li><button @click="location = !location">Location</button></li>
-      <div v-if="location" class="div">
-          <!-- <label for="location">Location:</label> -->
-          <select v-model="selectedLoc" multiple size="2">
+<div class="dropdown">
+  <button class="btn btn-secondary dropdown-toggle" type="button"  @click="toggleDropdownLoc" aria-expanded="isDropdownOpenLoc">
+    Location
+  </button>
+  <div class="dropdown-menu" :class="{ show: isDropdownOpenLoc }">
+          <select v-model="selectedLoc" multiple size="4" class="location">
             <option v-for="option in Array.from(new Set(this.locOptions))" :value="option" :key="option">
               {{ option }}
             </option>
           </select>
         </div>
-    </ul>
+</div>
+<br>
       <button class="filButton">Filter</button>
       <!-- <button class="filButton" @click="open = false">Close</button> -->
       <button class="filButton" @click="closeFilters()">Close</button>
@@ -94,6 +122,9 @@ export default {
       location: false,
       data: [],
       posOptions: [],
+      selectedPos: [],
+      isDropdownOpenPos: false,
+      isDropdownOpenLoc: false,
 
       experienceOptions: [1,2,3,4,5,6,7,8],
       ageOptions: ["20-30", "30-40", "40-50", "50-60"],
@@ -107,7 +138,20 @@ export default {
   methods: {
     closeFilters(){
         this.$emit('close')
-    }
+    },
+    toggleDropdownPos() {
+      this.isDropdownOpenPos = !this.isDropdownOpenPos;
+    },
+    toggleDropdownLoc() {
+      this.isDropdownOpenLoc = !this.isDropdownOpenLoc;
+    },
+    toggleItem(item) {
+      if (this.selectedPos.includes(item)) {
+        this.selectedPos = this.selectedPos.filter((i) => i !== item);
+      } else {
+        this.selectedPos.push(item);
+      }
+    },
   },
   mounted(){
     axios.get('http://localhost:5000/data/alldata')
@@ -166,5 +210,7 @@ input {
     background-color: grey;
     cursor: pointer;
 }
-
+.location{
+  width: 100%;
+}
 </style>
