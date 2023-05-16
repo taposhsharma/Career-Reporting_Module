@@ -10,7 +10,7 @@
       <filterComponent @close="closeFilters()"></filterComponent>
     </div>
     <div class="operations">
-      <!-- <input type="text" />
+  <!-- <input type="text" />
       <button>Search</button> -->
       <!-- <button @click="openFilters">Filters</button> -->
       <div class="input-group">
@@ -117,6 +117,9 @@ export default {
 </script>
 
 <style scoped>
+.main{
+  user-select: none;
+}
 .nav {
   display: flex;
   align-items: center;
