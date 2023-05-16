@@ -130,7 +130,7 @@ export default {
 .operations {
   margin: 8px auto;
   display: flex;
-  width: 55%;
+  width: 60%;
 }
 .operations input {
   width: 55%;
