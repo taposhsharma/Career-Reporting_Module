@@ -42,20 +42,20 @@
     
     <div class="dropdown">
       <button
-        class="btn btn-primary dropdown-toggle"
+        class="btn btn-secondary dropdown-toggle"
         type="button"
         @click="toggleDropdownPos"
         aria-haspopup="true"
         aria-expanded="isDropdownOpenPos"
       >
-        Selected items: {{ selectedPos.length }}
+        Position
       </button>
       <div class="dropdown-menu" :class="{ show: isDropdownOpenPos }">
         <a
           v-for="item in Array.from(new Set(this.posOptions))"
           :key="item"
           class="dropdown-item"
-          @click="toggleItem(item)"
+          @click="toggleItemPos(item)"
         >
           {{ item }}
         </a>
@@ -82,7 +82,7 @@
       </div>
       <vue-slider v-model="rangeAge" :min="0" :max="100"></vue-slider>
       
-<div class="dropdown">
+<!-- <div class="dropdown">
   <button class="btn btn-secondary dropdown-toggle" type="button"  @click="toggleDropdownLoc" aria-expanded="isDropdownOpenLoc">
     Location
   </button>
@@ -93,7 +93,28 @@
             </option>
           </select>
         </div>
-</div>
+</div> -->
+<div class="dropdown">
+      <button
+        class="btn btn-secondary dropdown-toggle"
+        type="button"
+        @click="toggleDropdownLoc"
+        aria-haspopup="true"
+        aria-expanded="isDropdownOpenLoc"
+      >
+        Location
+      </button>
+      <div class="dropdown-menu" :class="{ show: isDropdownOpenLoc }">
+        <a
+          v-for="item in Array.from(new Set(this.locOptions))"
+          :key="item"
+          class="dropdown-item"
+          @click="toggleItemLoc(item)"
+        >
+          {{ item }}
+        </a>
+      </div>
+    </div>
 <br>
       <button class="filButton">Filter</button>
       <!-- <button class="filButton" @click="open = false">Close</button> -->
@@ -145,11 +166,18 @@ export default {
     toggleDropdownLoc() {
       this.isDropdownOpenLoc = !this.isDropdownOpenLoc;
     },
-    toggleItem(item) {
+    toggleItemPos(item) {
       if (this.selectedPos.includes(item)) {
         this.selectedPos = this.selectedPos.filter((i) => i !== item);
       } else {
         this.selectedPos.push(item);
+      }
+    },
+    toggleItemLoc(item) {
+      if (this.selectedLoc.includes(item)) {
+        this.selectedLoc = this.selectedLoc.filter((i) => i !== item);
+      } else {
+        this.selectedLoc.push(item);
       }
     },
   },
@@ -170,15 +198,15 @@ export default {
 
 <style scoped>
 .filter {
-  margin: auto;
+  /* margin: auto; */
   width: 100%;
   background-color: #f5f5f5;
   /* width: 200px; */
   box-shadow: 0px 2px 4px #888;
-  /* position: fixed; */
   top: 60px;
   padding: 20px;
-  text-align: center;
+  /* text-align: center; */
+  align-items: center;
   user-select: none;
 }
 
@@ -193,7 +221,9 @@ export default {
 }
 
 .div {
+  margin-left: auto;
   display: flex;
+  align-items: center;
   /* align-content: center; */
   /* width: 200px; */
   margin-bottom: 10px;
@@ -205,12 +235,12 @@ export default {
 input {
   width: 50px;
 }
-
 .filButton{
     background-color: grey;
     cursor: pointer;
 }
 .location{
+  height: 100%;
   width: 100%;
 }
 </style>
