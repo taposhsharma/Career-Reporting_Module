@@ -25,9 +25,10 @@
         </div>
       </div>
     </div>
+    <br>
     <div class="row">
       <div class="col-4">Location</div>
-      <div class="dropdown">
+      <div class="col-8 dropdown">
       <button
         class="btn btn-secondary dropdown-toggle"
         type="button"
@@ -84,80 +85,6 @@
     <button class="filButton">Filter</button>
       <button class="filButton" @click="closeFilters()">Close</button>
   </div>
-  <!-- <div class="filter">
-      <div class="div">
-        <label id="experience">Experience:</label> &nbsp; 
-        <div class="experience">     
-          <input type="number" v-model="rangeExperience[0]">&nbsp;
-          <input type="number" v-model="rangeExperience[1]">
-          </div>
-        </div>
-        <br>
-      <vue-slider v-model="rangeExperience" :min="0" :max="100"></vue-slider>
-    
-    <div class="dropdown">
-      <button
-        class="btn btn-secondary dropdown-toggle"
-        type="button"
-        @click="toggleDropdownPos"
-        aria-haspopup="true"
-        aria-expanded="isDropdownOpenPos"
-      >
-        Position: {{selectedPos.length}}
-      </button>
-      <div class="dropdown-menu" :class="{ show: isDropdownOpenPos }">
-        <a
-          v-for="item in Array.from(new Set(this.posOptions))"
-          :key="item"
-          class="dropdown-item"
-          @click="toggleItemPos(item)"
-        >
-          {{ item }}
-        </a>
-      </div>
-    </div>
-<br>
-      <button @click="gender = !gender">Gender</button>
-      <div v-if="gender" class="div">
-          <label for="gender">Gender:</label>
-          <input type="checkbox" v-for="option in Array.from(new Set(this.genderOptions))" :value="option" :key="option">{{option}}
-        </div>
-
-      <div class="div" >
-        <label id="age">Age:</label>&nbsp;
-        <div class="experience">
-          <input type="number" id="min-age" v-model="rangeAge[0]">&nbsp;
-          <input type="number" id="max-age" v-model="rangeAge[1]">
-        </div>
-        <br>
-      </div>
-      <vue-slider v-model="rangeAge" :min="0" :max="100"></vue-slider>
-      
-<div class="dropdown">
-      <button
-        class="btn btn-secondary dropdown-toggle"
-        type="button"
-        @click="toggleDropdownLoc"
-        aria-haspopup="true"
-        aria-expanded="isDropdownOpenLoc"
-      >
-        Location: {{selectedLoc.length}}
-      </button>
-      <div class="dropdown-menu" :class="{ show: isDropdownOpenLoc }">
-        <a
-          v-for="item in Array.from(new Set(this.locOptions))"
-          :key="item"
-          class="dropdown-item"
-          @click="toggleItemLoc(item)"
-        >
-          {{ item }}
-        </a>
-      </div>
-    </div>
-<br>
-      <button class="filButton">Filter</button>
-      <button class="filButton" @click="closeFilters()">Close</button>
-  </div> -->
 </div>
 </template>
 
@@ -168,7 +95,7 @@ import 'vue-slider-component/theme/default.css';
 export default {
   name: "FilterComponent",
   components:{
-    VueSlider
+    VueSlider,
   },
   data() {
     return {
@@ -184,11 +111,9 @@ export default {
       selectedPos: [],
       isDropdownOpenPos: false,
       isDropdownOpenLoc: false,
-
       genderOptions: [],
       locOptions: [],
       selectedLoc: [],
-
     };
   },
   emits: ['close'],

@@ -64,20 +64,14 @@
     
   </tbody>
 </table>
-
-    <nav aria-label="Page navigation example">
-  <ul class="pagination justify-content-center">
-    <li class="page-item disabled">
-      <a class="page-link">Previous</a>
-    </li>
-    <li class="page-item"><a class="page-link" href="#">1</a></li>
-    <li class="page-item"><a class="page-link" href="#">2</a></li>
-    <li class="page-item"><a class="page-link" href="#">3</a></li>
-    <li class="page-item">
-      <a class="page-link" href="#">Next</a>
-    </li>
-  </ul>
-</nav>
+ <b-pagination
+      v-model="currentPage"
+      :total-rows="totalItems"
+      :per-page="perPage"
+      align="center"
+      size="md"
+      @input="handlePageChange"
+    ></b-pagination>
   </div>
 </template>
 
@@ -86,14 +80,22 @@ import axios from "axios";
 import filterComponent from "./FilterComponent.vue";
 export default {
   name: "applicantDetail",
+  components: {
+    filterComponent,
+  },
   data() {
     return {
       filterBox: false,
       applicants: [],
+      currentPage: 1,
+      // totalItems: 20, // Total number of items
+      perPage: 10 // Number of items per page
     };
   },
-  components: {
-    filterComponent,
+  computed: {
+    totalItems(){
+      return this.applicants.length
+    }
   },
   methods: {
     openFilters() {
@@ -101,6 +103,15 @@ export default {
     },
     closeFilters() {
       this.filterBox = !this.filterBox;
+    },
+     handlePageChange(newPage) {
+      // Update your data or fetch new data based on the newPage value
+      // For example, you can make an API request here to fetch the data for the new page
+      this.$router.push({
+        path: '/',
+        query: { page: newPage, limit: 20 }
+      });
+      console.log('Page changed to:', newPage);
     },
   },
   mounted() {
@@ -110,6 +121,7 @@ export default {
       .then((response) => {
         console.log(response.data.rows);
         this.applicants = [...response.data.rows];
+        console.log(this.applicants.length);
       })
       .catch((error) => console.log("Error-", error));
   },
