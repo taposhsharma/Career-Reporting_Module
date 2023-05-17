@@ -220,7 +220,7 @@ export default {
         },
         gender: {
           operator: "IN",
-          column: "application_status",
+          column: "gender",
           params: this.selectedGen,
         },
         experience: {
