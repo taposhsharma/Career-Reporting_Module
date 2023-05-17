@@ -1,18 +1,12 @@
 <template>
   <div class="main">
-    <!-- <div class="nav">
-      <h2>APPLICANTS' LIST</h2>
-    </div> -->
     <nav class="navbar sticky-top navbar-dark bg-dark">
       <a class="navbar-brand">Applicants' List</a>
     </nav>
-    <div class="filterBox" v-show="filterBox">
+    <!-- <div class="filterBox" v-show="filterBox">
       <filterComponent @close="closeFilters()"></filterComponent>
-    </div>
+    </div> -->
     <div class="operations">
-      <!-- <input type="text" />
-      <button>Search</button> -->
-      <!-- <button @click="openFilters">Filters</button> -->
       <div class="input-group">
         <input type="text" class="form-control" placeholder="Search" />
         <div class="input-group-append">
@@ -32,7 +26,7 @@
     </div>
     <div class="collapse" id="collapseExample">
       <div class="card card-body">
-        <filterComponent />
+        <filterComponent @filters="applyFilters"></filterComponent>
       </div>
     </div>
     <table class="table table-striped">
@@ -54,7 +48,7 @@
           <td>{{ applicant.position }}</td>
           <td>{{ applicant.experience }}</td>
           <td>{{ applicant.relevant_experience }}</td>
-          <td>{{ applicant.status }}</td>
+          <td>{{ applicant.application_status }}</td>
           <td>{{ applicant.email }}</td>
           <td>{{ applicant.mobile_no }}</td>
           <td>{{ applicant.dob }}</td>
@@ -82,7 +76,7 @@ export default {
   },
   data() {
     return {
-      filterBox: false,
+      // filterBox: false,
       applicants: [],
       currentPage: 1,
       // totalItems: 20, // Total number of items
@@ -95,12 +89,12 @@ export default {
     },
   },
   methods: {
-    openFilters() {
-      this.filterBox = !this.filterBox;
-    },
-    closeFilters() {
-      this.filterBox = !this.filterBox;
-    },
+    // openFilters() {
+    //   this.filterBox = !this.filterBox;
+    // },
+    // closeFilters() {
+    //   this.filterBox = !this.filterBox;
+    // },
     handlePageChange(newPage) {
       // Update your data or fetch new data based on the newPage value
       // For example, you can make an API request here to fetch the data for the new page
@@ -110,6 +104,9 @@ export default {
       });
       console.log("Page changed to:", newPage);
     },
+    applyFilters(filterOpts ){
+      console.log(filterOpts)
+    }
   },
   mounted() {
     const url = "http://localhost:5000/data/allData";
@@ -160,13 +157,13 @@ td {
   margin: auto;
   width: 55%;
 }
-.filterBox {
+/* .filterBox {
   position: absolute;
   width: 50%;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-}
+} */
 .search-bar {
   display: flex;
   align-items: center;
