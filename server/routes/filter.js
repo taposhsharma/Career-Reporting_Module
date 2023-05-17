@@ -12,7 +12,7 @@ router.get('/alldata',async (req,res)=>{
      await client.query(`SELECT *,CAST(applicant_iteration_master.dob AS char(10)) AS dob
      FROM applicant_iteration_master
      LEFT JOIN application_status_audit
-     ON applicant_iteration_master.id = application_status_audit.user_id;`,(error,result)=>{
+     ON applicant_iteration_master.id = application_status_audit.user_id LIMIT 20;`,(error,result)=>{
         if(error){
             throw error
         }
@@ -30,6 +30,7 @@ router.get('/alldata',async (req,res)=>{
         
         res.status(500).send("Error");
       } 
+
 });
 
 
@@ -158,6 +159,7 @@ router.post("/filterData" , async (req,res )=>{
   const selectQuery = generateQuery("applicant_iteration_master",data)
   console.log(selectQuery)
   
+
 
 })
 

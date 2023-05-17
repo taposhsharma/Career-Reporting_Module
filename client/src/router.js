@@ -6,7 +6,10 @@ import applicantDetail from './components/applicantDetail'
 Vue.use(VueRouter)
 
 const routes = [
-  { path: '/', name: 'applicantDetail', component: applicantDetail },
+  { path: '/', name: 'applicantDetail', component: applicantDetail, query: {
+    page: 1,
+    limit: 10
+  }},
 
 ]
 

@@ -1,133 +1,259 @@
 <template>
-  <div class="filter">
-    <ul>
-      <li><button @click="experience = !experience">Experience</button></li>
-      <div v-if="experience" class="div">
-        <div>
-          <label for="min-experience">Min Experience:</label>
-          <select id="experience">
-            <option v-for="option in experienceOptions" :value="option" :key="option">
-              {{ option }}
-            </option>
-          </select>
+  <div>
+    <div class="row m-1">
+      <div class="col-4">Position</div>
+      <div class="col-8 dropdown">
+        <button
+          class="btn btn-outline-info dropdown-toggle w-100 text-wrap"
+          type="button"
+          @click="toggleDropdownPos"
+          aria-haspopup="true"
+          aria-expanded="isDropdownOpenPos"
+        >
+          {{ selectedPos.length != 0 ? selectedPos.join(", ") : "Position" }}
+        </button>
+        <div class="dropdown-menu" :class="{ show: isDropdownOpenPos }">
+          <a
+            v-for="item in Array.from(new Set(this.posOptions))"
+            :key="item"
+            class="dropdown-item"
+            @click="toggleItemPos(item)"
+          >
+            {{ item }}
+          </a>
         </div>
-        <div>
-          <label for="max-experience">Max Experience:</label>
-          <select id="experience">
-            <option v-for="option in experienceOptions" :value="option" :key="option">
-              {{ option }}
-            </option>
-          </select>
-        </div>
-        <br>
       </div>
-      
-      <li><button @click="position = !position">Position</button></li>
-      <div v-if="position" class="div">
-          <!-- <label for="position">Position:</label> -->
-          <select v-model="selectedTech" multiple size="4">
-            <option v-for="option in Array.from(new Set(this.posOptions))" :value="option" :key="option">
-              {{ option }}
-            </option>
-          </select>
+    </div>
+    <div class="row m-1">
+      <div class="col-4">Location</div>
+      <div class="col-8 dropdown">
+        <button
+          class="btn btn-outline-info dropdown-toggle w-100 text-wrap"
+          type="button"
+          @click="toggleDropdownLoc"
+          aria-haspopup="true"
+          aria-expanded="isDropdownOpenLoc"
+        >
+          {{ selectedLoc.length != 0 ? selectedLoc.join(", ") : "Location" }}
+        </button>
+        <div class="dropdown-menu" :class="{ show: isDropdownOpenLoc }">
+          <a
+            v-for="item in Array.from(new Set(this.locOptions))"
+            :key="item"
+            class="dropdown-item"
+            @click="toggleItemLoc(item)"
+          >
+            {{ item }}
+          </a>
         </div>
-
-      <li><button @click="gender = !gender">Gender</button></li>
-      <div v-if="gender" class="div">
-          <label for="gender">Gender:</label>
-          <select id="gender">
-            <option v-for="option in Array.from(new Set(this.genderOptions))" :value="option" :key="option">
-              {{ option }}
-            </option>
-          </select>
-        </div>
-
-      <li><button @click="age = !age">Age</button></li>
-      <div v-if="age" class="div" >
-        <div>
-          <label for="min-age">Min age:</label>
-          <input type="number" id="min-age">
-        </div>
-        <div>
-          <label for="max-age">Max Age:</label>
-          <input type="number" id="max-age">
-        </div>
-        <br>
       </div>
-      
-      <li><button @click="location = !location">Location</button></li>
-      <div v-if="location" class="div">
-          <!-- <label for="location">Location:</label> -->
-          <select v-model="selectedLoc" multiple size="2">
-            <option v-for="option in Array.from(new Set(this.locOptions))" :value="option" :key="option">
-              {{ option }}
-            </option>
-          </select>
+    </div>
+    <div class="row m-1">
+      <div class="col-4">Application Status</div>
+      <div class="col-8 dropdown">
+        <button
+          class="btn btn-outline-info dropdown-toggle w-100 text-wrap"
+          type="button"
+          @click="toggleDropdownStatus"
+          aria-haspopup="true"
+          aria-expanded="isDropdownOpenStatus"
+        >
+          {{
+            selectedStatus.length != 0
+              ? selectedStatus.join(", ")
+              : "Application Status"
+          }}
+        </button>
+        <div class="dropdown-menu" :class="{ show: isDropdownOpenStatus }">
+          <a
+            v-for="item in Array.from(new Set(this.statusOptions))"
+            :key="item"
+            class="dropdown-item"
+            @click="toggleItemStatus(item)"
+          >
+            {{ item }}
+          </a>
         </div>
-    </ul>
-      <button class="filButton">Filter</button>
-      <!-- <button class="filButton" @click="open = false">Close</button> -->
-      <button class="filButton" @click="closeFilters()">Close</button>
+      </div>
+    </div>
+    <div class="row m-1">
+      <div class="col-4">Gender</div>
+      <b-form-checkbox-group
+        id="checkbox-group-2"
+        v-model="selectedGen"
+        name="flavour-2"
+        class="col-8"
+      >
+        <b-form-checkbox value="Male">Male</b-form-checkbox>
+        <b-form-checkbox value="Female">Female</b-form-checkbox>
+      </b-form-checkbox-group>
+    </div>
+    <div class="row m-1">
+      <div class="col-4">Experience</div>
+      <div class="col-8 d-flex align-items-center">
+        <input type="number" min="0" max="15" v-model="rangeExperience[0]" />
+        <vue-slider
+          v-model="rangeExperience"
+          :min="0"
+          :max="15"
+          class="w-100 ml-3 mr-3"
+        ></vue-slider>
+        <input type="number" min="0" max="15" v-model="rangeExperience[1]" />
+      </div>
+    </div>
+    <div class="row m-1">
+      <div class="col-4">Age</div>
+      <div class="col-8 d-flex align-items-center">
+        <input type="number" min="18" max="75" v-model="rangeAge[0]" />
+        <vue-slider
+          v-model="rangeAge"
+          :min="18"
+          :max="75"
+          class="w-100 ml-3 mr-3"
+        ></vue-slider>
+        <input type="number" min="18" max="75" v-model="rangeAge[1]" />
+      </div>
+    </div>
+    <div class="row m-2 d-flex" style="justify-content: space-evenly">
+      <button class="col-3 btn btn-danger" @click="resetFilters()">
+        Reset
+      </button>
+      <button class="col-3 btn btn-primary" @click="filterData()">
+        Filter
+      </button>
+    </div>
   </div>
-
 </template>
 
 <script>
-import axios from 'axios';
+import axios from "axios";
+import VueSlider from "vue-slider-component";
+import "vue-slider-component/theme/default.css";
 export default {
   name: "FilterComponent",
+  components: {
+    VueSlider,
+  },
   data() {
     return {
-      experience: false,
-      age: false,
-      position: false,
-      gender: false,
-      location: false,
-      data: [],
+      rangeExperience: [0, 15],
+      rangeAge: [18, 75],
       posOptions: [],
-
-      experienceOptions: [1,2,3,4,5,6,7,8],
-      ageOptions: ["20-30", "30-40", "40-50", "50-60"],
       genderOptions: [],
       locOptions: [],
+      statusOptions: [],
+
+      data: [],
+
+      selectedPos: [],
       selectedLoc: [],
-      selectedTech: [],
+      selectedStatus: [],
+      selectedGen: [],
+
+      isDropdownOpenPos: false,
+      isDropdownOpenLoc: false,
+      isDropdownOpenStatus: false,
     };
   },
-  emits: ['close'],
+  emits: ["filters"],
   methods: {
-    closeFilters(){
-        this.$emit('close')
-    }
+    toggleDropdownPos() {
+      this.isDropdownOpenPos = !this.isDropdownOpenPos;
+      this.isDropdownOpenLoc = false;
+      this.isDropdownOpenStatus = false;
+    },
+    toggleDropdownLoc() {
+      this.isDropdownOpenLoc = !this.isDropdownOpenLoc;
+      this.isDropdownOpenStatus = false;
+      this.isDropdownOpenPos = false;
+    },
+    toggleDropdownStatus() {
+      this.isDropdownOpenStatus = !this.isDropdownOpenStatus;
+      this.isDropdownOpenPos = false;
+      this.isDropdownOpenLoc = false;
+    },
+    toggleItemPos(item) {
+      if (this.selectedPos.includes(item)) {
+        this.selectedPos = this.selectedPos.filter((i) => i !== item);
+      } else {
+        this.selectedPos.push(item);
+      }
+    },
+    toggleItemLoc(item) {
+      if (this.selectedLoc.includes(item)) {
+        this.selectedLoc = this.selectedLoc.filter((i) => i !== item);
+      } else {
+        this.selectedLoc.push(item);
+      }
+    },
+    toggleItemStatus(item) {
+      if (this.selectedStatus.includes(item)) {
+        this.selectedStatus = this.selectedStatus.filter((i) => i !== item);
+      } else {
+        this.selectedStatus.push(item);
+      }
+    },
+    resetFilters() {
+      this.rangeExperience = [0, 15];
+      this.rangeAge = [18, 75];
+      this.selectedPos = [];
+      this.selectedLoc = [];
+      this.selectedStatus = [];
+      this.selectedGen = [];
+    },
+    filterData() {
+      const filterOpts = {
+        position: {
+          operator: "IN",
+          column: "position",
+          params: this.selectedPos,
+        },
+        location: {
+          operator: "IN",
+          column: "city",
+          params: this.selectedLoc,
+        },
+        application_status: {
+          operator: "IN",
+          column: "application_status",
+          params: this.selectedStatus,
+        },
+        gender: {
+          operator: "IN",
+          column: "application_status",
+          params: this.selectedGen,
+        },
+        experience: {
+          operator: "BETWEEN",
+          column: "experience",
+          min: this.rangeExperience[0],
+          max: this.rangeExperience[1],
+        },
+        age: {
+          operator: "BETWEEN",
+          column: "dob",
+          min: this.rangeAge[0],
+          max: this.rangeAge[1],
+        },
+      };
+      this.$emit("filters", filterOpts);
+    },
   },
-  mounted(){
-    axios.get('http://localhost:5000/data/alldata')
-    .then(res => {
-        console.log(res.data.rows);
-        this.data = res.data.rows;
-        for(let i=0;i < this.data.length; i++){
-            this.posOptions.push(this.data[i].position)
-            this.genderOptions.push(this.data[i].gender)
-            this.locOptions.push(this.data[i].city)
-        }
-        })
-  }
+  mounted() {
+    axios.get("http://localhost:5000/data/alldata").then((res) => {
+      this.data = res.data.rows;
+      for (let i = 0; i < this.data.length; i++) {
+        this.posOptions.push(this.data[i].position);
+        this.genderOptions.push(this.data[i].gender);
+        this.locOptions.push(this.data[i].city);
+        this.statusOptions.push(this.data[i].application_status);
+      }
+    });
+  },
 };
 </script>
 
 <style scoped>
-.filter {
-  margin: auto;
-  background-color: #f5f5f5;
-  /* width: 200px; */
-  box-shadow: 0px 2px 4px #888;
-  /* position: fixed; */
-  top: 60px;
-  padding: 20px;
-  text-align: center;
-  user-select: none;
-}
-
 .filter ul {
   list-style: none;
   padding: 0;
@@ -139,18 +265,26 @@ export default {
 }
 
 .div {
+  margin-left: auto;
   display: flex;
+  align-items: center;
   /* align-content: center; */
   /* width: 200px; */
   margin-bottom: 10px;
+}
+.experience {
+  right: 0px;
 }
 
 input {
   width: 50px;
 }
-
-.filButton{
-    background-color: grey;
-    cursor: pointer;
+.filButton {
+  background-color: grey;
+  cursor: pointer;
+}
+.location {
+  height: 100%;
+  width: 100%;
 }
 </style>
