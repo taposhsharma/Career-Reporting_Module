@@ -3,9 +3,7 @@
     <nav class="navbar sticky-top navbar-dark bg-dark">
       <a class="navbar-brand">Applicants' List</a>
     </nav>
-    <!-- <div class="filterBox" v-show="filterBox">
-      <filterComponent @close="closeFilters()"></filterComponent>
-    </div> -->
+
     <div class="operations">
       <div class="input-group">
         <input type="text" class="form-control" placeholder="Search" />
@@ -89,12 +87,6 @@ export default {
     },
   },
   methods: {
-    // openFilters() {
-    //   this.filterBox = !this.filterBox;
-    // },
-    // closeFilters() {
-    //   this.filterBox = !this.filterBox;
-    // },
     handlePageChange(newPage) {
       // Update your data or fetch new data based on the newPage value
       // For example, you can make an API request here to fetch the data for the new page
@@ -147,23 +139,12 @@ table {
 th {
   color: #903564;
 }
-/* table,
-th,
-td {
-  border: 1px solid black;
-  border-collapse: collapse;
-} */
+
 .card {
   margin: auto;
   width: 55%;
 }
-/* .filterBox {
-  position: absolute;
-  width: 50%;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-} */
+
 .search-bar {
   display: flex;
   align-items: center;
