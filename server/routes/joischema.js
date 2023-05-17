@@ -16,6 +16,11 @@ const schemas = {
         column: Joi.string().required(),
         params: Joi.array().items(Joi.string()).required()
       }).required(),
+      application_status: Joi.object({
+        operator: Joi.string().required(),
+        column: Joi.string().required(),
+        params: Joi.array().items(Joi.string()).required()
+      }).required(),
       experience: Joi.object({
         operator: Joi.string().required(),
         column: Joi.string().required(),
