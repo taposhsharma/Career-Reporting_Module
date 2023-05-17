@@ -231,7 +231,6 @@ export default {
 .experience {
   right: 0px;
 }
-
 input {
   width: 50px;
 }
