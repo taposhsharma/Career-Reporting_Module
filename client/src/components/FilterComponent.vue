@@ -200,6 +200,9 @@ export default {
       this.selectedLoc = [];
       this.selectedStatus = [];
       this.selectedGen = [];
+      this.isDropdownOpenLoc = false;
+      this.isDropdownOpenPos = false;
+      this.isDropdownOpenStatus = false;
     },
     filterData() {
       const filterOpts = {
