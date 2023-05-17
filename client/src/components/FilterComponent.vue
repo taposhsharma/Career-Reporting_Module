@@ -49,23 +49,27 @@
       </div>
     </div>
     <div class="row m-1">
-      <div class="col-4">Interview Results</div>
+      <div class="col-4">Application Status</div>
       <div class="col-8 dropdown">
         <button
           class="btn btn-outline-info dropdown-toggle w-100 text-wrap"
           type="button"
-          @click="toggleDropdownRes"
+          @click="toggleDropdownStatus"
           aria-haspopup="true"
-          aria-expanded="isDropdownOpenRes"
+          aria-expanded="isDropdownOpenStatus"
         >
-          {{ selectedRes.length != 0 ? selectedRes.join(", ") : "Interview Results" }}
+          {{
+            selectedStatus.length != 0
+              ? selectedStatus.join(", ")
+              : "Application Status"
+          }}
         </button>
-        <div class="dropdown-menu" :class="{ show: isDropdownOpenRes }">
+        <div class="dropdown-menu" :class="{ show: isDropdownOpenStatus }">
           <a
-            v-for="item in Array.from(new Set(this.resOptions))"
+            v-for="item in Array.from(new Set(this.statusOptions))"
             :key="item"
             class="dropdown-item"
-            @click="toggleItemRes(item)"
+            @click="toggleItemStatus(item)"
           >
             {{ item }}
           </a>
@@ -111,8 +115,12 @@
       </div>
     </div>
     <div class="row m-2 d-flex" style="justify-content: space-evenly">
-      <button class="col-3 btn btn-danger">Reset</button>
-      <button class="col-3 btn btn-primary">Filter</button>
+      <button class="col-3 btn btn-danger" @click="resetFilters()">
+        Reset
+      </button>
+      <button class="col-3 btn btn-primary" @click="filterData()">
+        Filter
+      </button>
     </div>
   </div>
 </template>
@@ -133,43 +141,36 @@ export default {
       posOptions: [],
       genderOptions: [],
       locOptions: [],
-      resOptions: [],
-      
-      // experience: false,
-      // age: false,
-      // position: false,
-      // gender: false,
-      // location: false,
+      statusOptions: [],
+
       data: [],
-    
+
       selectedPos: [],
       selectedLoc: [],
-      selectedRes: [],
+      selectedStatus: [],
       selectedGen: [],
 
       isDropdownOpenPos: false,
       isDropdownOpenLoc: false,
-      isDropdownOpenRes: false,
-
-      
-      
+      isDropdownOpenStatus: false,
     };
   },
+  emits: ["filters"],
   methods: {
     toggleDropdownPos() {
       this.isDropdownOpenPos = !this.isDropdownOpenPos;
-      this.isDropdownOpenLoc = false
-      this.isDropdownOpenRes = false
+      this.isDropdownOpenLoc = false;
+      this.isDropdownOpenStatus = false;
     },
     toggleDropdownLoc() {
       this.isDropdownOpenLoc = !this.isDropdownOpenLoc;
-      this.isDropdownOpenRes = false
-      this.isDropdownOpenPos = false
+      this.isDropdownOpenStatus = false;
+      this.isDropdownOpenPos = false;
     },
-    toggleDropdownRes(){
-      this.isDropdownOpenRes =! this.isDropdownOpenRes;
-      this.isDropdownOpenPos = false
-      this.isDropdownOpenLoc = false
+    toggleDropdownStatus() {
+      this.isDropdownOpenStatus = !this.isDropdownOpenStatus;
+      this.isDropdownOpenPos = false;
+      this.isDropdownOpenLoc = false;
     },
     toggleItemPos(item) {
       if (this.selectedPos.includes(item)) {
@@ -185,24 +186,67 @@ export default {
         this.selectedLoc.push(item);
       }
     },
-    toggleItemRes(item) {
-      if (this.selectedRes.includes(item)) {
-        this.selectedRes = this.selectedRes.filter((i) => i !== item);
+    toggleItemStatus(item) {
+      if (this.selectedStatus.includes(item)) {
+        this.selectedStatus = this.selectedStatus.filter((i) => i !== item);
       } else {
-        this.selectedRes.push(item);
+        this.selectedStatus.push(item);
       }
+    },
+    resetFilters() {
+      this.rangeExperience = [0, 15];
+      this.rangeAge = [18, 75];
+      this.selectedPos = [];
+      this.selectedLoc = [];
+      this.selectedStatus = [];
+      this.selectedGen = [];
+    },
+    filterData() {
+      const filterOpts = {
+        position: {
+          operator: "IN",
+          column: "position",
+          params: this.selectedPos,
+        },
+        location: {
+          operator: "IN",
+          column: "city",
+          params: this.selectedLoc,
+        },
+        application_status: {
+          operator: "IN",
+          column: "application_status",
+          params: this.selectedStatus,
+        },
+        gender: {
+          operator: "IN",
+          column: "gender",
+          params: this.selectedGen,
+        },
+        experience: {
+          operator: "BETWEEN",
+          column: "experience",
+          min: this.rangeExperience[0],
+          max: this.rangeExperience[1],
+        },
+        age: {
+          operator: "BETWEEN",
+          column: "dob",
+          min: this.rangeAge[0],
+          max: this.rangeAge[1],
+        },
+      };
+      this.$emit("filters", filterOpts);
     },
   },
   mounted() {
     axios.get("http://localhost:5000/data/alldata").then((res) => {
-      console.log(res.data.rows);
       this.data = res.data.rows;
-      console.log(this.data.length)
       for (let i = 0; i < this.data.length; i++) {
         this.posOptions.push(this.data[i].position);
         this.genderOptions.push(this.data[i].gender);
         this.locOptions.push(this.data[i].city);
-        this.resOptions.push(this.data[i].application_status)
+        this.statusOptions.push(this.data[i].application_status);
       }
     });
   },
