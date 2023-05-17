@@ -137,8 +137,26 @@ router.post("/filterData" , async (req,res )=>{
   const data = req.body
  
 
-  res.status(200).send("result");
-    
+  function generateQuery(tableName,conditionsObject){
+    let query = `SELECT * FROM ${tableName}`;
+
+    if(conditionsObject && Object.keys(conditionsObject).length>0){
+      query += ' WHERE ';
+      const condition = [];
+
+    for (const key in conditionsObject) {
+      const value = conditionsObject[key];
+
+      if (value.operator=== "IN") {
+        condition.push(`${value.column} ${value.operator} (${value.params.map(val => `'${val}'`).join(', ')})`);
+      } 
+    }
+    query += condition.join(' AND ');
+    }
+    return query;
+  }
+  const selectQuery = generateQuery("applicant_iteration_master",data)
+  console.log(selectQuery)
   
 
 })
