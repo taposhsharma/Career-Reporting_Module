@@ -99,7 +99,7 @@ export default {
   },
   data() {
     return {
-      rangeExperience: [25, 75],
+      rangeExperience: [0, 15],
       rangeAge: [25, 75],
       experience: false,
       age: false,

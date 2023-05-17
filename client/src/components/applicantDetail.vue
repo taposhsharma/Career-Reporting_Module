@@ -4,21 +4,19 @@
       <h2>APPLICANTS' LIST</h2>
     </div> -->
     <nav class="navbar sticky-top navbar-dark bg-dark">
-  <a class="navbar-brand">Applicants' List</a>
-</nav>
+      <a class="navbar-brand">Applicants' List</a>
+    </nav>
     <div class="filterBox" v-show="filterBox">
       <filterComponent @close="closeFilters()"></filterComponent>
     </div>
     <div class="operations">
-  <!-- <input type="text" />
+      <!-- <input type="text" />
       <button>Search</button> -->
       <!-- <button @click="openFilters">Filters</button> -->
       <div class="input-group">
         <input type="text" class="form-control" placeholder="Search" />
         <div class="input-group-append">
-          <button class="btn btn-secondary" type="button">
-            Search
-          </button>
+          <button class="btn btn-secondary" type="button">Search</button>
         </div>
       </div>
       <button
@@ -33,14 +31,14 @@
       </button>
     </div>
     <div class="collapse" id="collapseExample">
-        <div class="card card-body">
-          <filterComponent />
-        </div>
+      <div class="card card-body">
+        <filterComponent />
       </div>
-      <table class="table table-striped">
-  <thead>
-    <tr>
-      <th scope="col">Name</th>
+    </div>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">Name</th>
           <th scope="col">Position</th>
           <th scope="col">Exprience</th>
           <th scope="col">Relevant Experience</th>
@@ -48,10 +46,10 @@
           <th scope="col">Email</th>
           <th scope="col">Mobile</th>
           <th scope="col">DOB</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr v-for="applicant in applicants" :key="applicant.id">
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="applicant in applicants" :key="applicant.id">
           <td>{{ applicant.first_name }} {{ applicant.last_name }}</td>
           <td>{{ applicant.position }}</td>
           <td>{{ applicant.experience }}</td>
@@ -61,10 +59,9 @@
           <td>{{ applicant.mobile_no }}</td>
           <td>{{ applicant.dob }}</td>
         </tr>
-    
-  </tbody>
-</table>
- <b-pagination
+      </tbody>
+    </table>
+    <b-pagination
       v-model="currentPage"
       :total-rows="totalItems"
       :per-page="perPage"
@@ -89,13 +86,13 @@ export default {
       applicants: [],
       currentPage: 1,
       // totalItems: 20, // Total number of items
-      perPage: 10 // Number of items per page
+      perPage: 10, // Number of items per page
     };
   },
   computed: {
-    totalItems(){
-      return this.applicants.length
-    }
+    totalItems() {
+      return this.applicants.length;
+    },
   },
   methods: {
     openFilters() {
@@ -104,14 +101,14 @@ export default {
     closeFilters() {
       this.filterBox = !this.filterBox;
     },
-     handlePageChange(newPage) {
+    handlePageChange(newPage) {
       // Update your data or fetch new data based on the newPage value
       // For example, you can make an API request here to fetch the data for the new page
       this.$router.push({
-        path: '/',
-        query: { page: newPage, limit: 20 }
+        path: "/",
+        query: { page: newPage, limit: 20 },
       });
-      console.log('Page changed to:', newPage);
+      console.log("Page changed to:", newPage);
     },
   },
   mounted() {
@@ -129,7 +126,7 @@ export default {
 </script>
 
 <style scoped>
-.main{
+.main {
   user-select: none;
 }
 .nav {
@@ -159,7 +156,7 @@ td {
   border: 1px solid black;
   border-collapse: collapse;
 } */
-.card{
+.card {
   margin: auto;
   width: 55%;
 }
@@ -202,5 +199,4 @@ td {
 .search-bar button:hover {
   background-color: #495057;
 }
-
 </style>
