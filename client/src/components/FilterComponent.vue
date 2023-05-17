@@ -1,17 +1,16 @@
 <template>
-<div>
-<div class="filter">
-    <div class="row">
+  <div>
+    <div class="row m-1">
       <div class="col-4">Position</div>
       <div class="col-8 dropdown">
         <button
-          class="btn btn-secondary dropdown-toggle"
+          class="btn btn-outline-info dropdown-toggle w-100 text-wrap"
           type="button"
           @click="toggleDropdownPos"
           aria-haspopup="true"
           aria-expanded="isDropdownOpenPos"
         >
-          Position
+          {{ selectedPos.length != 0 ? selectedPos.join(", ") : "Position" }}
         </button>
         <div class="dropdown-menu" :class="{ show: isDropdownOpenPos }">
           <a
@@ -25,38 +24,67 @@
         </div>
       </div>
     </div>
-    <br>
-    <div class="row">
+    <div class="row m-1">
       <div class="col-4">Location</div>
       <div class="col-8 dropdown">
-      <button
-        class="btn btn-secondary dropdown-toggle"
-        type="button"
-        @click="toggleDropdownLoc"
-        aria-haspopup="true"
-        aria-expanded="isDropdownOpenLoc"
-      >
-        Location: {{selectedLoc.length}}
-      </button>
-      <div class="dropdown-menu" :class="{ show: isDropdownOpenLoc }">
-        <a
-          v-for="item in Array.from(new Set(this.locOptions))"
-          :key="item"
-          class="dropdown-item"
-          @click="toggleItemLoc(item)"
+        <button
+          class="btn btn-outline-info dropdown-toggle w-100 text-wrap"
+          type="button"
+          @click="toggleDropdownLoc"
+          aria-haspopup="true"
+          aria-expanded="isDropdownOpenLoc"
         >
-          {{ item }}
-        </a>
+          {{ selectedLoc.length != 0 ? selectedLoc.join(", ") : "Location" }}
+        </button>
+        <div class="dropdown-menu" :class="{ show: isDropdownOpenLoc }">
+          <a
+            v-for="item in Array.from(new Set(this.locOptions))"
+            :key="item"
+            class="dropdown-item"
+            @click="toggleItemLoc(item)"
+          >
+            {{ item }}
+          </a>
+        </div>
       </div>
     </div>
-    </div>
-    <div class="row">
+    <div class="row m-1">
       <div class="col-4">Interview Results</div>
+      <div class="col-8 dropdown">
+        <button
+          class="btn btn-outline-info dropdown-toggle w-100 text-wrap"
+          type="button"
+          @click="toggleDropdownRes"
+          aria-haspopup="true"
+          aria-expanded="isDropdownOpenRes"
+        >
+          {{ selectedRes.length != 0 ? selectedRes.join(", ") : "Interview Results" }}
+        </button>
+        <div class="dropdown-menu" :class="{ show: isDropdownOpenRes }">
+          <a
+            v-for="item in Array.from(new Set(this.resOptions))"
+            :key="item"
+            class="dropdown-item"
+            @click="toggleItemRes(item)"
+          >
+            {{ item }}
+          </a>
+        </div>
+      </div>
     </div>
-    <div class="row">
+    <div class="row m-1">
       <div class="col-4">Gender</div>
+      <b-form-checkbox-group
+        id="checkbox-group-2"
+        v-model="selectedGen"
+        name="flavour-2"
+        class="col-8"
+      >
+        <b-form-checkbox value="Male">Male</b-form-checkbox>
+        <b-form-checkbox value="Female">Female</b-form-checkbox>
+      </b-form-checkbox-group>
     </div>
-    <div class="row">
+    <div class="row m-1">
       <div class="col-4">Experience</div>
       <div class="col-8 d-flex align-items-center">
         <input type="number" min="0" max="15" v-model="rangeExperience[0]" />
@@ -69,7 +97,7 @@
         <input type="number" min="0" max="15" v-model="rangeExperience[1]" />
       </div>
     </div>
-    <div class="row">
+    <div class="row m-1">
       <div class="col-4">Age</div>
       <div class="col-8 d-flex align-items-center">
         <input type="number" min="18" max="75" v-model="rangeAge[0]" />
@@ -79,53 +107,69 @@
           :max="75"
           class="w-100 ml-3 mr-3"
         ></vue-slider>
-        <input type="number" min="0" max="15" v-model="rangeAge[1]" />
+        <input type="number" min="18" max="75" v-model="rangeAge[1]" />
       </div>
     </div>
-    <button class="filButton">Filter</button>
-      <button class="filButton" @click="closeFilters()">Close</button>
+    <div class="row m-2 d-flex" style="justify-content: space-evenly">
+      <button class="col-3 btn btn-danger">Reset</button>
+      <button class="col-3 btn btn-primary">Filter</button>
+    </div>
   </div>
-</div>
 </template>
 
 <script>
-import axios from 'axios';
-import VueSlider from 'vue-slider-component';
-import 'vue-slider-component/theme/default.css';
+import axios from "axios";
+import VueSlider from "vue-slider-component";
+import "vue-slider-component/theme/default.css";
 export default {
   name: "FilterComponent",
-  components:{
+  components: {
     VueSlider,
   },
   data() {
     return {
       rangeExperience: [0, 15],
-      rangeAge: [25, 75],
-      experience: false,
-      age: false,
-      position: false,
-      gender: false,
-      location: false,
-      data: [],
+      rangeAge: [18, 75],
       posOptions: [],
-      selectedPos: [],
-      isDropdownOpenPos: false,
-      isDropdownOpenLoc: false,
       genderOptions: [],
       locOptions: [],
+      resOptions: [],
+      
+      // experience: false,
+      // age: false,
+      // position: false,
+      // gender: false,
+      // location: false,
+      data: [],
+    
+      selectedPos: [],
       selectedLoc: [],
+      selectedRes: [],
+      selectedGen: [],
+
+      isDropdownOpenPos: false,
+      isDropdownOpenLoc: false,
+      isDropdownOpenRes: false,
+
+      
+      
     };
   },
-  emits: ['close'],
   methods: {
-    closeFilters(){
-        this.$emit('close')
-    },
     toggleDropdownPos() {
       this.isDropdownOpenPos = !this.isDropdownOpenPos;
+      this.isDropdownOpenLoc = false
+      this.isDropdownOpenRes = false
     },
     toggleDropdownLoc() {
       this.isDropdownOpenLoc = !this.isDropdownOpenLoc;
+      this.isDropdownOpenRes = false
+      this.isDropdownOpenPos = false
+    },
+    toggleDropdownRes(){
+      this.isDropdownOpenRes =! this.isDropdownOpenRes;
+      this.isDropdownOpenPos = false
+      this.isDropdownOpenLoc = false
     },
     toggleItemPos(item) {
       if (this.selectedPos.includes(item)) {
@@ -141,36 +185,31 @@ export default {
         this.selectedLoc.push(item);
       }
     },
+    toggleItemRes(item) {
+      if (this.selectedRes.includes(item)) {
+        this.selectedRes = this.selectedRes.filter((i) => i !== item);
+      } else {
+        this.selectedRes.push(item);
+      }
+    },
   },
-  mounted(){
-    axios.get('http://localhost:5000/data/alldata')
-    .then(res => {
-        console.log(res.data.rows);
-        this.data = res.data.rows;
-        for(let i=0;i < this.data.length; i++){
-            this.posOptions.push(this.data[i].position)
-            this.genderOptions.push(this.data[i].gender)
-            this.locOptions.push(this.data[i].city)
-        }
-        })
-  }
+  mounted() {
+    axios.get("http://localhost:5000/data/alldata").then((res) => {
+      console.log(res.data.rows);
+      this.data = res.data.rows;
+      console.log(this.data.length)
+      for (let i = 0; i < this.data.length; i++) {
+        this.posOptions.push(this.data[i].position);
+        this.genderOptions.push(this.data[i].gender);
+        this.locOptions.push(this.data[i].city);
+        this.resOptions.push(this.data[i].application_status)
+      }
+    });
+  },
 };
 </script>
 
 <style scoped>
-.filter {
-  /* margin: auto; */
-  width: 100%;
-  background-color: #f5f5f5;
-  /* width: 200px; */
-  box-shadow: 0px 2px 4px #888;
-  top: 60px;
-  padding: 20px;
-  /* text-align: center; */
-  align-items: center;
-  user-select: none;
-}
-
 .filter ul {
   list-style: none;
   padding: 0;
@@ -189,18 +228,18 @@ export default {
   /* width: 200px; */
   margin-bottom: 10px;
 }
-.experience{
+.experience {
   right: 0px;
 }
 
 input {
   width: 50px;
 }
-.filButton{
-    background-color: grey;
-    cursor: pointer;
+.filButton {
+  background-color: grey;
+  cursor: pointer;
 }
-.location{
+.location {
   height: 100%;
   width: 100%;
 }
