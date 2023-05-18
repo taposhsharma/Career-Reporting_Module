@@ -115,6 +115,9 @@ export default {
 </script>
 
 <style scoped>
+.collapse{
+  margin: 10px;
+}
 .main {
   user-select: none;
 }
@@ -128,7 +131,7 @@ export default {
 .operations {
   margin: 8px auto;
   display: flex;
-  width: 60%;
+  width: 55%;
 }
 .operations input {
   width: 55%;

@@ -205,40 +205,40 @@ export default {
       this.isDropdownOpenStatus = false;
     },
     filterData() {
-      const filterOpts = {
-        position: {
+      const filterOpts = [
+        {
           operator: "IN",
           column: "position",
           params: this.selectedPos,
         },
-        location: {
+        {
           operator: "IN",
           column: "city",
           params: this.selectedLoc,
         },
-        application_status: {
+        {
           operator: "IN",
           column: "application_status",
           params: this.selectedStatus,
         },
-        gender: {
+        {
           operator: "IN",
           column: "gender",
           params: this.selectedGen,
         },
-        experience: {
+        {
           operator: "BETWEEN",
           column: "experience",
           min: this.rangeExperience[0],
           max: this.rangeExperience[1],
         },
-        age: {
+        {
           operator: "BETWEEN",
           column: "dob",
           min: this.rangeAge[0],
           max: this.rangeAge[1],
         },
-      };
+      ];
       this.$emit("filters", filterOpts);
     },
   },
