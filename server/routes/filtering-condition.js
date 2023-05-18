@@ -41,12 +41,13 @@ router.post("/filterData" , async (req, res )=> {
     }
     const selectQuery = generateQuery("applicant_iteration_master",data)
     console.log(selectQuery)
-    client.query(selectQuery, (err, result) => {
-      if(!err){
-        res.send(result.rows)
-      }
-      else{
-        console.log(err);
+    client.query(selectQuery, (error, result) => {
+      if(error){
+        console.log(error);
+        res.status(403).send(error);
+    }
+    else{
+        res.status(200).send(result.rows);
       }
     })
   
