@@ -46,9 +46,17 @@ const Joi = require('joi')
       })
     )
   });
-  // const schemas = {
-  //   dataSchema: Joi.array().items(objectSchema)};
-    const schemas = Joi.array().items(objectSchema);
+
+  // schema for searching text
+  /*const alphabeticSchema = Joi.string().regex(/^[a-zA-Z]+$/, 'alphabet');
+  searchingSchema: Joi.object(alphabeticSchema.required())
+  */
+
+  const schemas = {
+    dataSchema: Joi.array().items(objectSchema),
+  
+  };
+    // const schemas = Joi.array().items(objectSchema);
     
     
   // define all the other schemas below 

@@ -133,6 +133,4 @@ router.get('/getMaxExperience', async (req, res) => {
   }
 });
 
-
-
 module.exports = router
