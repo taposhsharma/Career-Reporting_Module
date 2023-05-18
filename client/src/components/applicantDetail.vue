@@ -106,7 +106,7 @@ export default {
     //     console.log(error);
     //   })
     // }
-  },
+  }},
   mounted() {
     const url = "http://localhost:5000/data/allData";
     axios
@@ -118,11 +118,12 @@ export default {
       })
       .catch((error) => console.log("Error-", error));
   },
-};
+}
+
 </script>
 
 <style scoped>
-.collapse{
+.collapse {
   margin: 10px;
 }
 .main {
