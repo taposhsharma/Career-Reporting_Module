@@ -39,16 +39,16 @@ const Joi = require('joi')
     operator: Joi.string().required(),
     column: Joi.string().required(),
     params: Joi.alternatives().try(
-      Joi.string(),
       Joi.array(),
       Joi.object({
         min: Joi.number().integer().required(),
         max: Joi.number().integer().required()
       })
-    ).required()
+    )
   });
-  const schemas = Joi.array().items(objectSchema);
-    
+  // const schemas = {
+  //   dataSchema: Joi.array().items(objectSchema)};
+    const schemas = Joi.array().items(objectSchema);
     
     
   // define all the other schemas below 
