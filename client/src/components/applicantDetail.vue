@@ -101,6 +101,7 @@ export default {
       axios.post('http://localhost:5000/data/filterData', filterOpts)
       .then((response) => {
         console.log(response.data);
+        this.applicants = response.data
       })
       .catch((error) => {
         console.log(error);
