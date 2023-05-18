@@ -97,8 +97,15 @@ export default {
       console.log("Page changed to:", newPage);
     },
     applyFilters(filterOpts ){
-      console.log(filterOpts)
-    }
+      console.log(filterOpts);
+    //   axios.post('http://localhost:5000/data/filterData/' + JSON.stringify(filterOpts))
+    //   .then((response) => {
+    //     console.log(response.data);
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   })
+    // }
   },
   mounted() {
     const url = "http://localhost:5000/data/allData";

@@ -38,12 +38,16 @@ const Joi = require('joi')
   const objectSchema = Joi.object({
     operator: Joi.string().required(),
     column: Joi.string().required(),
-    params: Joi.array().object({
-      min: Joi.number().integer().required(),
-      max: Joi.number().integer().required()
-    }).string().required()
+    params: Joi.alternatives().try(
+      Joi.string(),
+      Joi.array(),
+      Joi.object({
+        min: Joi.number().integer().required(),
+        max: Joi.number().integer().required()
+      })
+    ).required()
   });
-  const schemas = Joi.array.items(objectSchema);
+  const schemas = Joi.array().items(objectSchema);
     
     
     
