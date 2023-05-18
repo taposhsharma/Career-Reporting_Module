@@ -17,7 +17,7 @@
         data-toggle="collapse"
         data-target="#collapseExample"
         aria-expanded="false"
-        aria-controls="collapseExample"
+        aria-controls="collapseExample" ref="filterBoxBtn"
       >
         Filter
       </button>
@@ -74,11 +74,9 @@ export default {
   },
   data() {
     return {
-      // filterBox: false,
       applicants: [],
       currentPage: 1,
-      // totalItems: 20, // Total number of items
-      perPage: 10, // Number of items per page
+      perPage: 10,
     };
   },
   computed: {
@@ -106,7 +104,9 @@ export default {
       .catch((error) => {
         console.log(error);
       })
+      this.$refs.filterBoxBtn.click()
     }
+    
 
   },
   mounted() {
