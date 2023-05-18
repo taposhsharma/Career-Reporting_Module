@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="row m-1">
+    <!-- <div class="row m-1">
       <div class="col-4">Position</div>
       <div class="col-8 dropdown" id="dropdown-checkbox">
         <button
@@ -24,8 +24,14 @@
           </b-form-checkbox>
         </div>
       </div>
-    </div>
+    </div> -->
     <div class="row m-1">
+      <div class="col-4">Position</div>
+      <div class="col-8 ">
+        <multiselect v-model="selectedPos" placeholder="Search or add a position" :options="Array.from(new Set(this.posOptions))" :multiple="true" :taggable="true" @tag="addTag" :close-on-select="false"></multiselect>
+      </div>
+    </div>
+    <!-- <div class="row m-1">
       <div class="col-4">Location</div>
       <div class="col-8 dropdown" id="dropdown-checkbox">
         <button
@@ -49,8 +55,14 @@
           </b-form-checkbox>
         </div>
       </div>
-    </div>
+    </div> -->
     <div class="row m-1">
+      <div class="col-4">Location</div>
+      <div class="col-8">
+       <multiselect v-model="selectedLoc" placeholder="Search or add a city" :options="Array.from(new Set(this.locOptions))" :multiple="true" :taggable="true" @tag="addTag" :close-on-select="false"></multiselect>
+      </div>
+    </div>
+    <!-- <div class="row m-1">
       <div class="col-4">Application Status</div>
       <div class="col-8 dropdown" id="dropdown-checkbox">
         <button
@@ -77,6 +89,12 @@
             {{ item }}
           </b-form-checkbox>
         </div>
+      </div>
+    </div> -->
+     <div class="row m-1">
+      <div class="col-4">Application Status</div>
+      <div class="col-8 ">
+        <multiselect v-model="selectedStatus" placeholder="Search or add a status" :options="Array.from(new Set(this.statusOptions))" :multiple="true" :taggable="true" @tag="addTag" :close-on-select="false"></multiselect>
       </div>
     </div>
     <div class="row m-1">
@@ -133,10 +151,12 @@
 import axios from "axios";
 import VueSlider from "vue-slider-component";
 import "vue-slider-component/theme/default.css";
+import Multiselect from 'vue-multiselect'
 export default {
   name: "FilterComponent",
   components: {
     VueSlider,
+    Multiselect
   },
   data() {
     return {
@@ -197,6 +217,10 @@ export default {
         this.selectedStatus.push(item);
       }
     },
+    // addTag (newTag) {
+    //   // if(this.posOptions.includes(newTag))
+    //   // this.selectedPos.push(newTag)
+    // },
     resetFilters() {
       this.rangeExperience = [0, 45];
       this.rangeAge = [18, 75];
@@ -276,6 +300,7 @@ export default {
   },
 };
 </script>
+<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 
 <style scoped>
 .filter ul {
@@ -300,6 +325,9 @@ export default {
 }
 .experience {
   right: 0px;
+}
+.col-4{
+  padding: 8px 15px;
 }
 input {
   width: 50px;
