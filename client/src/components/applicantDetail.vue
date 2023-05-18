@@ -101,6 +101,7 @@ export default {
       axios.post('http://localhost:5000/data/filterData', filterOpts)
       .then((response) => {
         console.log(response.data);
+        this.applicants = response.data
       })
       .catch((error) => {
         console.log(error);
@@ -123,6 +124,9 @@ export default {
 </script>
 
 <style scoped>
+.collapse {
+  margin: 10px;
+}
 .main {
   user-select: none;
 }
@@ -136,7 +140,7 @@ export default {
 .operations {
   margin: 8px auto;
   display: flex;
-  width: 60%;
+  width: 55%;
 }
 .operations input {
   width: 55%;
