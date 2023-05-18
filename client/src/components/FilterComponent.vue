@@ -2,31 +2,32 @@
   <div>
     <div class="row m-1">
       <div class="col-4">Position</div>
-      <div class="col-8 dropdown">
+      <div class="col-8 dropdown" id="dropdown-checkbox">
         <button
           class="btn btn-outline-info dropdown-toggle w-100 text-wrap"
           type="button"
           @click="toggleDropdownPos"
           aria-haspopup="true"
-          aria-expanded="isDropdownOpenPos"
+          :aria-expanded="isDropdownOpenPos"
         >
-          {{ selectedPos.length != 0 ? selectedPos.join(", ") : "Position" }}
+          {{ selectedPos.length !== 0 ? selectedPos.join(", ") : "Position" }}
         </button>
         <div class="dropdown-menu" :class="{ show: isDropdownOpenPos }">
-          <a
+          <b-form-checkbox
             v-for="item in Array.from(new Set(this.posOptions))"
             :key="item"
+            v-model="selectedPos"
+            :value="item"
             class="dropdown-item"
-            @click="toggleItemPos(item)"
           >
             {{ item }}
-          </a>
+          </b-form-checkbox>
         </div>
       </div>
     </div>
     <div class="row m-1">
       <div class="col-4">Location</div>
-      <div class="col-8 dropdown">
+      <div class="col-8 dropdown" id="dropdown-checkbox">
         <button
           class="btn btn-outline-info dropdown-toggle w-100 text-wrap"
           type="button"
@@ -37,20 +38,21 @@
           {{ selectedLoc.length != 0 ? selectedLoc.join(", ") : "Location" }}
         </button>
         <div class="dropdown-menu" :class="{ show: isDropdownOpenLoc }">
-          <a
+          <b-form-checkbox
             v-for="item in Array.from(new Set(this.locOptions))"
             :key="item"
             class="dropdown-item"
-            @click="toggleItemLoc(item)"
+            v-model="selectedLoc"
+            :value="item"
           >
             {{ item }}
-          </a>
+          </b-form-checkbox>
         </div>
       </div>
     </div>
     <div class="row m-1">
       <div class="col-4">Application Status</div>
-      <div class="col-8 dropdown">
+      <div class="col-8 dropdown" id="dropdown-checkbox">
         <button
           class="btn btn-outline-info dropdown-toggle w-100 text-wrap"
           type="button"
@@ -65,14 +67,15 @@
           }}
         </button>
         <div class="dropdown-menu" :class="{ show: isDropdownOpenStatus }">
-          <a
+          <b-form-checkbox
             v-for="item in Array.from(new Set(this.statusOptions))"
             :key="item"
             class="dropdown-item"
-            @click="toggleItemStatus(item)"
+            v-model="selectedStatus"
+            :value="item"
           >
             {{ item }}
-          </a>
+          </b-form-checkbox>
         </div>
       </div>
     </div>
@@ -247,10 +250,13 @@ export default {
     axios.get("http://localhost:5000/data/alldata").then((res) => {
       this.data = res.data.rows;
       for (let i = 0; i < this.data.length; i++) {
-        this.posOptions.push(this.data[i].position);
-        this.genderOptions.push(this.data[i].gender);
-        this.locOptions.push(this.data[i].city);
-        this.statusOptions.push(this.data[i].application_status);
+        if (this.data[i].position != null)
+          this.posOptions.push(this.data[i].position);
+        if (this.data[i].gender != null)
+          this.genderOptions.push(this.data[i].gender);
+        if (this.data[i].city != null) this.locOptions.push(this.data[i].city);
+        if (this.data[i].application_status != null)
+          this.statusOptions.push(this.data[i].application_status);
       }
     });
   },
@@ -267,7 +273,9 @@ export default {
 .filter li {
   margin-bottom: 10px;
 }
-
+.dropdown-item {
+  padding-left: 28px;
+}
 .div {
   margin-left: auto;
   display: flex;
