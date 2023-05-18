@@ -11,6 +11,7 @@ app.use(cors())
 
 app.use(express.json())
 
-app.use('/data' , middleware(schemas.dataSchema),require('./routes/filter'))
+app.use('/data', require('./routes/filter.js'));
+app.use('/data' , middleware(schemas.dataSchema),require('./routes/filtering-condition.js'));
 const PORT= 5000
 app.listen(PORT,console.log(`Server is running at Port----> ${PORT}`))
