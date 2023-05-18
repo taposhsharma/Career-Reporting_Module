@@ -89,6 +89,7 @@
       >
         <b-form-checkbox value="Male">Male</b-form-checkbox>
         <b-form-checkbox value="Female">Female</b-form-checkbox>
+        <b-form-checkbox value="Other">Other</b-form-checkbox>
       </b-form-checkbox-group>
     </div>
     <div class="row m-1">
@@ -197,7 +198,7 @@ export default {
       }
     },
     resetFilters() {
-      this.rangeExperience = [0, 15];
+      this.rangeExperience = [0, 45];
       this.rangeAge = [18, 75];
       this.selectedPos = [];
       this.selectedLoc = [];
@@ -208,41 +209,54 @@ export default {
       this.isDropdownOpenStatus = false;
     },
     filterData() {
-      const filterOpts = [
-        {
+      const filterOpts = [];
+      if (this.selectedPos.length) {
+        filterOpts.push({
           operator: "IN",
           column: "position",
           params: this.selectedPos,
-        },
-        {
+        });
+      }
+      if (this.selectedLoc.length) {
+        filterOpts.push({
           operator: "IN",
           column: "city",
           params: this.selectedLoc,
-        },
-        {
+        });
+      }
+      if (this.selectedStatus.length) {
+        filterOpts.push({
           operator: "IN",
           column: "application_status",
           params: this.selectedStatus,
-        },
-        {
+        });
+      }
+      if (this.selectedGen.length) {
+        filterOpts.push({
           operator: "IN",
           column: "gender",
           params: this.selectedGen,
-        },
-        {
+        });
+      }
+      if (!(this.rangeExperience[0] == 0 && this.rangeExperience[1] == 45)) {
+        filterOpts.push({
           operator: "BETWEEN",
           column: "experience",
           params: {
             min: this.rangeExperience[0],
             max: this.rangeExperience[1],
           },
-        },
-        {
+        });
+      }
+      if (!(this.rangeAge[0] == 18 && this.rangeAge[1] == 75)) {
+        filterOpts.push({
           operator: "BETWEEN",
           column: "dob",
           params: { min: this.rangeAge[0], max: this.rangeAge[1] },
-        },
-      ];
+        });
+      }
+      console.log("filter options",filterOpts)
+      
       this.$emit("filters", filterOpts);
     },
   },
