@@ -229,14 +229,15 @@ export default {
         {
           operator: "BETWEEN",
           column: "experience",
-          min: this.rangeExperience[0],
-          max: this.rangeExperience[1],
+          params: {
+            min: this.rangeExperience[0],
+            max: this.rangeExperience[1],
+          },
         },
         {
           operator: "BETWEEN",
           column: "dob",
-          min: this.rangeAge[0],
-          max: this.rangeAge[1],
+          params: { min: this.rangeAge[0], max: this.rangeAge[1] },
         },
       ];
       this.$emit("filters", filterOpts);
