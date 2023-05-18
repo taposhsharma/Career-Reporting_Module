@@ -98,7 +98,7 @@
         <vue-slider
           v-model="rangeExperience"
           :min="0"
-          :max="15"
+          :max="45"
           class="w-100 ml-3 mr-3"
         ></vue-slider>
         <input type="number" min="0" max="15" v-model="rangeExperience[1]" />
@@ -139,7 +139,7 @@ export default {
   },
   data() {
     return {
-      rangeExperience: [0, 15],
+      rangeExperience: [0, 45],
       rangeAge: [18, 75],
       posOptions: [],
       genderOptions: [],
