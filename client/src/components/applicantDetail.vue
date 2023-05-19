@@ -6,9 +6,16 @@
 
     <div class="operations">
       <div class="input-group">
-        <input type="text" class="form-control" placeholder="Search" />
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Search"
+          v-model="searchedText"
+        />
         <div class="input-group-append">
-          <button class="btn btn-secondary" type="button">Search</button>
+          <button class="btn btn-secondary" type="button" @click="search()">
+            Search
+          </button>
         </div>
       </div>
       <button
@@ -17,7 +24,8 @@
         data-toggle="collapse"
         data-target="#collapseExample"
         aria-expanded="false"
-        aria-controls="collapseExample" ref="filterBoxBtn"
+        aria-controls="collapseExample"
+        ref="filterBoxBtn"
       >
         Filter
       </button>
@@ -76,7 +84,9 @@ export default {
     return {
       applicants: [],
       currentPage: 1,
-      perPage: 10,
+      // totalItems: 20, // Total number of items
+      perPage: 10, // Number of items per page
+      searchedText: "",
     };
   },
   computed: {
@@ -94,20 +104,42 @@ export default {
       });
       console.log("Page changed to:", newPage);
     },
-    applyFilters(filterOpts ){
-      console.log(filterOpts);
-      axios.post('http://localhost:5000/data/filterData', filterOpts)
-      .then((response) => {
-        console.log(response.data);
-        this.applicants = response.data
-      })
-      .catch((error) => {
-        console.log(error);
-      })
-      this.$refs.filterBoxBtn.click()
-    }
-    
 
+    applyFilters(filterOpts) {
+      console.log(filterOpts);
+      const url = "http://localhost:5000/data/filterData";
+      axios
+        .post(url, filterOpts)
+        .then((response) => {
+          if (response.status == 200) {
+            console.log(response.data);
+            this.applicants = response.data;
+          } else {
+            console.log("error");
+            console.log(response.data);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+
+    search() {
+      console.log(this.searchedText);
+      const text = [this.searchedText];
+      console.log(typeof text);
+      const url = "http://localhost:5000/data/search";
+      axios
+        .post(url, text)
+        .then((response) => {
+          console.log(response);
+          this.applicants = response.data;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      this.$refs.filterBoxBtn.click();
+    },
   },
   mounted() {
     const url = "http://localhost:5000/data/allData";
@@ -120,7 +152,7 @@ export default {
       })
       .catch((error) => console.log("Error-", error));
   },
-}
+};
 </script>
 
 <style scoped>

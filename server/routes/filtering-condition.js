@@ -24,8 +24,8 @@ router.post("/filterData", async (req, res) => {
         }
         else if (value.operator === "BETWEEN") {
           console.log("hello between")
-          if (value.column === "experience") {
-            condition.push(`(date_part ('years', age(current_date, "createdAt"))) + ${value.column} ${value.operator} ${value.params.min} AND ${value.params.max}`)
+          if(value.column==="experience"){
+            condition.push(`(date_part ('years', age(current_date, "createdAt"))) + coalesce(${value.column}, 0) ${value.operator} ${value.params.min} AND ${value.params.max}`)
           }
           if (value.column === "dob") {
             condition.push(`date_part('years', age(current_date, dob)) ${value.operator} ${value.params.min} AND ${value.params.max}`);
