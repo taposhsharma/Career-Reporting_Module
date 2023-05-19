@@ -27,8 +27,16 @@
     </div> -->
     <div class="row m-1">
       <div class="col-4">Position</div>
-      <div class="col-8 ">
-        <multiselect v-model="selectedPos" placeholder="Search or add a position" :options="Array.from(new Set(this.posOptions))" :multiple="true" :taggable="true" @tag="addTag" :close-on-select="false"></multiselect>
+      <div class="col-8">
+        <multiselect
+          v-model="selectedPos"
+          placeholder="Search or add a position"
+          :options="Array.from(new Set(this.posOptions))"
+          :multiple="true"
+          :taggable="true"
+          @tag="addPosition"
+          :close-on-select="false"
+        ></multiselect>
       </div>
     </div>
     <!-- <div class="row m-1">
@@ -59,7 +67,15 @@
     <div class="row m-1">
       <div class="col-4">Location</div>
       <div class="col-8">
-       <multiselect v-model="selectedLoc" placeholder="Search or add a city" :options="Array.from(new Set(this.locOptions))" :multiple="true" :taggable="true" @tag="addTag" :close-on-select="false"></multiselect>
+        <multiselect
+          v-model="selectedLoc"
+          placeholder="Search or add a city"
+          :options="Array.from(new Set(this.locOptions))"
+          :multiple="true"
+          :taggable="true"
+          @tag="addLocation"
+          :close-on-select="false"
+        ></multiselect>
       </div>
     </div>
     <!-- <div class="row m-1">
@@ -91,10 +107,18 @@
         </div>
       </div>
     </div> -->
-     <div class="row m-1">
+    <div class="row m-1">
       <div class="col-4">Application Status</div>
-      <div class="col-8 ">
-        <multiselect v-model="selectedStatus" placeholder="Search or add a status" :options="Array.from(new Set(this.statusOptions))" :multiple="true" :taggable="true" @tag="addTag" :close-on-select="false"></multiselect>
+      <div class="col-8">
+        <multiselect
+          v-model="selectedStatus"
+          placeholder="Search or add a status"
+          :options="Array.from(new Set(this.statusOptions))"
+          :multiple="true"
+          :taggable="true"
+          @tag="addStatus"
+          :close-on-select="false"
+        ></multiselect>
       </div>
     </div>
     <div class="row m-1">
@@ -107,6 +131,7 @@
       >
         <b-form-checkbox value="Male">Male</b-form-checkbox>
         <b-form-checkbox value="Female">Female</b-form-checkbox>
+        <b-form-checkbox value="Other">Other</b-form-checkbox>
       </b-form-checkbox-group>
     </div>
     <div class="row m-1">
@@ -116,7 +141,7 @@
         <vue-slider
           v-model="rangeExperience"
           :min="0"
-          :max="15"
+          :max="45"
           class="w-100 ml-3 mr-3"
         ></vue-slider>
         <input type="number" min="0" max="15" v-model="rangeExperience[1]" />
@@ -150,16 +175,16 @@
 import axios from "axios";
 import VueSlider from "vue-slider-component";
 import "vue-slider-component/theme/default.css";
-import Multiselect from 'vue-multiselect'
+import Multiselect from "vue-multiselect";
 export default {
   name: "FilterComponent",
   components: {
     VueSlider,
-    Multiselect
+    Multiselect,
   },
   data() {
     return {
-      rangeExperience: [0, 15],
+      rangeExperience: [0, 45],
       rangeAge: [18, 75],
       posOptions: [],
       genderOptions: [],
@@ -216,12 +241,23 @@ export default {
         this.selectedStatus.push(item);
       }
     },
-    // addTag (newTag) {
-    //   // if(this.posOptions.includes(newTag))
-    //   // this.selectedPos.push(newTag)
+    // addTag(newTag) {
+    //   if (this.posOptions.includes(newTag)) this.selectedPos.push(newTag);
     // },
+    addPosition(tag) {
+      this.selectedPos.push(tag);
+      this.posOptions.push(tag);
+    },
+    addLocation(tag) {
+      this.selectedLoc.push(tag);
+      this.locOptions.push(tag);
+    },
+    addStatus(tag) {
+      this.selectedStatus.push(tag);
+      this.statusOptions.push(tag);
+    },
     resetFilters() {
-      this.rangeExperience = [0, 15];
+      this.rangeExperience = [0, 45];
       this.rangeAge = [18, 75];
       this.selectedPos = [];
       this.selectedLoc = [];
@@ -232,41 +268,54 @@ export default {
       this.isDropdownOpenStatus = false;
     },
     filterData() {
-      const filterOpts = [
-        {
+      const filterOpts = [];
+      if (this.selectedPos.length) {
+        filterOpts.push({
           operator: "IN",
           column: "position",
           params: this.selectedPos,
-        },
-        {
+        });
+      }
+      if (this.selectedLoc.length) {
+        filterOpts.push({
           operator: "IN",
           column: "city",
           params: this.selectedLoc,
-        },
-        {
+        });
+      }
+      if (this.selectedStatus.length) {
+        filterOpts.push({
           operator: "IN",
           column: "application_status",
           params: this.selectedStatus,
-        },
-        {
+        });
+      }
+      if (this.selectedGen.length) {
+        filterOpts.push({
           operator: "IN",
           column: "gender",
           params: this.selectedGen,
-        },
-        {
+        });
+      }
+      if (!(this.rangeExperience[0] == 0 && this.rangeExperience[1] == 45)) {
+        filterOpts.push({
           operator: "BETWEEN",
           column: "experience",
           params: {
             min: this.rangeExperience[0],
             max: this.rangeExperience[1],
           },
-        },
-        {
+        });
+      }
+      if (!(this.rangeAge[0] == 18 && this.rangeAge[1] == 75)) {
+        filterOpts.push({
           operator: "BETWEEN",
           column: "dob",
           params: { min: this.rangeAge[0], max: this.rangeAge[1] },
-        },
-      ];
+        });
+      }
+      console.log("filter options", filterOpts);
+
       this.$emit("filters", filterOpts);
     },
   },
@@ -312,7 +361,7 @@ export default {
 .experience {
   right: 0px;
 }
-.col-4{
+.col-4 {
   padding: 8px 15px;
 }
 input {
