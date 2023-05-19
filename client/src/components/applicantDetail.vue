@@ -105,7 +105,7 @@
         </tr>
       </tbody>
     </table>
-    <!-- <b-pagination
+    <b-pagination
       v-model="currentPage"
       :total-rows="totalItems"
       :per-page="limit"
