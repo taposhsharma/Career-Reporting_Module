@@ -5,6 +5,9 @@ const client = require('../connection/db.js');
 //filter data with data validation
 router.post("/filterData", async (req, res) => {
   const data = req.body;
+  const limit = req.query.limit
+  const offset = (req.query.page - 1) * limit
+  console.log(limit, offset);
   console.log(data);
 
 
@@ -24,12 +27,12 @@ router.post("/filterData", async (req, res) => {
         }
         else if (value.operator === "BETWEEN") {
           console.log("hello between")
-          if(value.column==="experience"){
+          if (value.column === "experience") {
             condition.push(`(date_part ('years', age(current_date, "createdAt"))) + coalesce(${value.column}, 0) ${value.operator} ${value.params.min} AND ${value.params.max}`)
           }
           if (value.column === "dob") {
             condition.push(`date_part('years', age(current_date, dob)) ${value.operator} ${value.params.min} AND ${value.params.max}`);
-          } 
+          }
 
         }
       }
@@ -38,7 +41,9 @@ router.post("/filterData", async (req, res) => {
     }
     return query;
   }
-  const selectQuery = generateQuery("applicant_iteration_master", data)
+  let selectQuery = generateQuery("applicant_iteration_master", data)
+  let pagingQuery = ` LIMIT ${limit} OFFSET ${offset}`
+  selectQuery += pagingQuery
   console.log(selectQuery)
   client.query(selectQuery, (error, result) => {
     if (error) {

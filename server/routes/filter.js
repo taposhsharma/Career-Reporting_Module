@@ -9,7 +9,7 @@ router.get('/alldata', async (req, res) => {
     await client.query("BEGIN");
 
     const selectQuery = `SELECT *,CAST(applicant_iteration_master.dob AS char(10)) AS dob
-    FROM applicant_iteration_master LIMIT 20`
+    FROM applicant_iteration_master`
     // const selectQuery = `SELECT *,CAST(applicant_iteration_master.dob AS char(10)) AS dob
     // FROM applicant_iteration_master
     // LEFT JOIN application_status_audit

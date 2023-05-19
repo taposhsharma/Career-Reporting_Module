@@ -22,15 +22,15 @@
         class="btn btn-primary"
         type="button"
         data-toggle="collapse"
-        data-target="#collapseExample"
+        data-target="#collapseFilters"
         aria-expanded="false"
-        aria-controls="collapseExample"
+        aria-controls="collapseFilters"
         ref="filterBoxBtn"
       >
         Filter
       </button>
     </div>
-    <div class="collapse" id="collapseExample">
+    <div class="collapse" id="collapseFilters">
       <div class="card card-body">
         <filterComponent @filters="applyFilters"></filterComponent>
       </div>
@@ -49,7 +49,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="applicant in applicants" :key="applicant.id">
+        <tr v-for="applicant in computedApplicants" :key="applicant.id">
           <td>{{ applicant.first_name }} {{ applicant.last_name }}</td>
           <td>{{ applicant.position }}</td>
           <td>{{ applicant.experience }}</td>
@@ -67,7 +67,6 @@
       :per-page="perPage"
       align="center"
       size="md"
-      @input="handlePageChange"
     ></b-pagination>
   </div>
 </template>
@@ -84,8 +83,8 @@ export default {
     return {
       applicants: [],
       currentPage: 1,
-      // totalItems: 20, // Total number of items
-      perPage: 10, // Number of items per page
+      perPage: 10,
+      total_pages: 0,
       searchedText: "",
     };
   },
@@ -93,53 +92,38 @@ export default {
     totalItems() {
       return this.applicants.length;
     },
+    computedApplicants(){
+      if (!this.applicants) return []
+      else {
+        const firstIndex = (this.currentPage - 1) * this.perPage
+        const lastIndex = this.currentPage * this.perPage
+
+        return this.applicants.slice(firstIndex, lastIndex)
+    }
+  }
   },
   methods: {
-    handlePageChange(newPage) {
-      // Update your data or fetch new data based on the newPage value
-      // For example, you can make an API request here to fetch the data for the new page
-      this.$router.push({
-        path: "/",
-        query: { page: newPage, limit: 20 },
-      });
-      console.log("Page changed to:", newPage);
-    },
-
-    applyFilters(filterOpts) {
+    // handlePageChange(newPage) {
+    //   // Update your data or fetch new data based on the newPage value
+    //   // For example, you can make an API request here to fetch the data for the new page
+    //   this.$router.push({
+    //     path: "/",
+    //     query: { page: newPage, limit: 20 },
+    //   });
+    //   console.log("Page changed to:", newPage);
+    // },
+    applyFilters(filterOpts ){
       console.log(filterOpts);
-      const url = "http://localhost:5000/data/filterData";
-      axios
-        .post(url, filterOpts)
-        .then((response) => {
-          if (response.status == 200) {
-            console.log(response.data);
-            this.applicants = response.data;
-          } else {
-            console.log("error");
-            console.log(response.data);
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-      this.$refs.filterBoxBtn.click();
-    },
+      axios.post('http://localhost:5000/data/filterData', filterOpts)
+      .then((response) => {
+        console.log(response.data);
+        this.applicants = response.data
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+    }
 
-    search() {
-      console.log(this.searchedText);
-      const text = [this.searchedText];
-      console.log(typeof text);
-      const url = "http://localhost:5000/data/search";
-      axios
-        .post(url, text)
-        .then((response) => {
-          console.log(response);
-          this.applicants = response.data;
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    },
   },
   mounted() {
     const url = "http://localhost:5000/data/allData";
@@ -177,13 +161,14 @@ export default {
 .operations input {
   width: 55%;
 }
-table {
+.table {
   margin: 0 auto;
+  /* height: 300px; */
+  /* overflow: auto; */
 }
 th {
   color: #903564;
 }
-
 .card {
   margin: auto;
   width: 55%;
