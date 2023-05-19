@@ -8,7 +8,7 @@ router.post('/search', async (req, res) => {
       console.log(req.body);
       const searchedText = req.body[0];
     //   console.log(searchedText);
-      const query = `SELECT * FROM applicant_iteration_master WHERE first_name LIKE '%${searchedText}%' OR last_name LIKE '%${searchedText}%' OR email LIKE '%${searchedText}%'`;
+      const query = `SELECT *,CAST(dob AS char(10)) AS dob FROM applicant_iteration_master WHERE first_name LIKE '%${searchedText}%' OR last_name LIKE '%${searchedText}%' OR email LIKE '%${searchedText}%'`;
       console.log(query);
       await client.query(query, (error, result) => {
         if(error)

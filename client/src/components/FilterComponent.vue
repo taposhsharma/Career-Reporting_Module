@@ -27,8 +27,16 @@
     </div> -->
     <div class="row m-1">
       <div class="col-4">Position</div>
-      <div class="col-8 ">
-        <multiselect v-model="selectedPos" placeholder="Search or add a position" :options="Array.from(new Set(this.posOptions))" :multiple="true" :taggable="true" @tag="addTag" :close-on-select="false"></multiselect>
+      <div class="col-8">
+        <multiselect
+          v-model="selectedPos"
+          placeholder="Search or add a position"
+          :options="Array.from(new Set(this.posOptions))"
+          :multiple="true"
+          :taggable="true"
+          @tag="addPosition"
+          :close-on-select="false"
+        ></multiselect>
       </div>
     </div>
     <!-- <div class="row m-1">
@@ -59,7 +67,15 @@
     <div class="row m-1">
       <div class="col-4">Location</div>
       <div class="col-8">
-       <multiselect v-model="selectedLoc" placeholder="Search or add a city" :options="Array.from(new Set(this.locOptions))" :multiple="true" :taggable="true" @tag="addTag" :close-on-select="false"></multiselect>
+        <multiselect
+          v-model="selectedLoc"
+          placeholder="Search or add a city"
+          :options="Array.from(new Set(this.locOptions))"
+          :multiple="true"
+          :taggable="true"
+          @tag="addLocation"
+          :close-on-select="false"
+        ></multiselect>
       </div>
     </div>
     <!-- <div class="row m-1">
@@ -91,10 +107,18 @@
         </div>
       </div>
     </div> -->
-     <div class="row m-1">
+    <div class="row m-1">
       <div class="col-4">Application Status</div>
-      <div class="col-8 ">
-        <multiselect v-model="selectedStatus" placeholder="Search or add a status" :options="Array.from(new Set(this.statusOptions))" :multiple="true" :taggable="true" @tag="addTag" :close-on-select="false"></multiselect>
+      <div class="col-8">
+        <multiselect
+          v-model="selectedStatus"
+          placeholder="Search or add a status"
+          :options="Array.from(new Set(this.statusOptions))"
+          :multiple="true"
+          :taggable="true"
+          @tag="addStatus"
+          :close-on-select="false"
+        ></multiselect>
       </div>
     </div>
     <div class="row m-1">
@@ -151,12 +175,12 @@
 import axios from "axios";
 import VueSlider from "vue-slider-component";
 import "vue-slider-component/theme/default.css";
-import Multiselect from 'vue-multiselect'
+import Multiselect from "vue-multiselect";
 export default {
   name: "FilterComponent",
   components: {
     VueSlider,
-    Multiselect
+    Multiselect,
   },
   data() {
     return {
@@ -217,10 +241,21 @@ export default {
         this.selectedStatus.push(item);
       }
     },
-    // addTag (newTag) {
-    //   // if(this.posOptions.includes(newTag))
-    //   // this.selectedPos.push(newTag)
+    // addTag(newTag) {
+    //   if (this.posOptions.includes(newTag)) this.selectedPos.push(newTag);
     // },
+    addPosition(tag) {
+      this.selectedPos.push(tag);
+      this.posOptions.push(tag);
+    },
+    addLocation(tag) {
+      this.selectedLoc.push(tag);
+      this.locOptions.push(tag);
+    },
+    addStatus(tag) {
+      this.selectedStatus.push(tag);
+      this.statusOptions.push(tag);
+    },
     resetFilters() {
       this.rangeExperience = [0, 45];
       this.rangeAge = [18, 75];
@@ -279,8 +314,8 @@ export default {
           params: { min: this.rangeAge[0], max: this.rangeAge[1] },
         });
       }
-      console.log("filter options",filterOpts)
-      
+      console.log("filter options", filterOpts);
+
       this.$emit("filters", filterOpts);
     },
   },
@@ -326,7 +361,7 @@ export default {
 .experience {
   right: 0px;
 }
-.col-4{
+.col-4 {
   padding: 8px 15px;
 }
 input {
