@@ -35,50 +35,6 @@
         <filterComponent @filters="applyFilters"></filterComponent>
       </div>
     </div>
-    <div class="text-right p-3">
-      <!-- <b-form-select v-model="limit" class="mb-3 w-25">
-      <b-form-select-option :value="50">50</b-form-select-option>
-      <b-form-select-option value="a">Option A</b-form-select-option>
-      </b-form-select> -->
-      <!-- <button class="btn btn-">Page per view: {{limit}}</button> -->
-
-      <div class="dropdown show">
-        <span
-          class="btn btn-primary dropdown-toggle"
-          href="#"
-          role="button"
-          id="dropdownMenuLink"
-          data-toggle="dropdown"
-          aria-haspopup="true"
-          aria-expanded="false"
-        >
-          View per Page: {{ limit }}
-        </span>
-
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-          <span
-            class="dropdown-item font-weight-bold text-center"
-            @click="pageLimit(50)"
-            >50</span
-          >
-          <span
-            class="dropdown-item font-weight-bold text-center"
-            @click="pageLimit(100)"
-            >100</span
-          >
-          <span
-            class="dropdown-item font-weight-bold text-center"
-            @click="pageLimit(150)"
-            >150</span
-          >
-          <span
-            class="dropdown-item font-weight-bold text-center"
-            @click="pageLimit(200)"
-            >200</span
-          >
-        </div>
-      </div>
-    </div>
     <table class="table table-striped">
       <thead>
         <tr>
@@ -108,7 +64,7 @@
     <b-pagination
       v-model="currentPage"
       :total-rows="totalItems"
-      :per-page="limit"
+      :per-page="perPage"
       align="center"
       size="md"
     ></b-pagination>
@@ -127,7 +83,7 @@ export default {
     return {
       applicants: [],
       currentPage: 1,
-      limit: 50, // Number of items per page
+      perPage: 10,
       total_pages: 0,
       searchedText: "",
     };
@@ -170,32 +126,15 @@ export default {
 
   },
   mounted() {
-    // const url = "http://localhost:5000/data/allData";
-    // axios
-    //   .get(url)
-    //   .then((response) => {
-    //     console.log(response.data.rows);
-    //     this.applicants = [...response.data.rows];
-    //     console.log(this.applicants.length);
-    //   })
-    //   .catch((error) => console.log("Error-", error));
-    this.currentPage = 1;
-    this.limit = 50;
-    const url = `http://localhost:5000/data/filterData?limit=${this.limit}&page=${this.currentPage} `;
+    const url = "http://localhost:5000/data/allData";
     axios
-      .post(url, [])
+      .get(url)
       .then((response) => {
-        if (response.status == 200) {
-          console.log(response.data);
-          this.applicants = response.data;
-        } else {
-          console.log("error");
-          console.log(response.data);
-        }
+        console.log(response.data.rows);
+        this.applicants = [...response.data.rows];
+        console.log(this.applicants.length);
       })
-      .catch((error) => {
-        console.log(error);
-      });
+      .catch((error) => console.log("Error-", error));
   },
 };
 </script>
@@ -230,7 +169,6 @@ export default {
 th {
   color: #903564;
 }
-
 .card {
   margin: auto;
   width: 55%;
