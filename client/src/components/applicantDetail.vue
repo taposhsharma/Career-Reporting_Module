@@ -41,7 +41,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="applicant in applicants" :key="applicant.id">
+        <tr v-for="applicant in computedApplicants" :key="applicant.id">
           <td>{{ applicant.first_name }} {{ applicant.last_name }}</td>
           <td>{{ applicant.position }}</td>
           <td>{{ applicant.experience }}</td>
@@ -59,7 +59,6 @@
       :per-page="perPage"
       align="center"
       size="md"
-      @input="handlePageChange"
     ></b-pagination>
   </div>
 </template>
@@ -85,17 +84,26 @@ export default {
     totalItems() {
       return this.applicants.length;
     },
+    computedApplicants(){
+      if (!this.applicants) return []
+      else {
+        const firstIndex = (this.currentPage - 1) * this.perPage
+        const lastIndex = this.currentPage * this.perPage
+
+        return this.applicants.slice(firstIndex, lastIndex)
+    }
+  }
   },
   methods: {
-    handlePageChange(newPage) {
-      // Update your data or fetch new data based on the newPage value
-      // For example, you can make an API request here to fetch the data for the new page
-      this.$router.push({
-        path: "/",
-        query: { page: newPage, limit: 20 },
-      });
-      console.log("Page changed to:", newPage);
-    },
+    // handlePageChange(newPage) {
+    //   // Update your data or fetch new data based on the newPage value
+    //   // For example, you can make an API request here to fetch the data for the new page
+    //   this.$router.push({
+    //     path: "/",
+    //     query: { page: newPage, limit: 20 },
+    //   });
+    //   console.log("Page changed to:", newPage);
+    // },
     applyFilters(filterOpts ){
       console.log(filterOpts);
       axios.post('http://localhost:5000/data/filterData', filterOpts)
@@ -145,8 +153,10 @@ export default {
 .operations input {
   width: 55%;
 }
-table {
+.table {
   margin: 0 auto;
+  /* height: 300px; */
+  /* overflow: auto; */
 }
 th {
   color: #903564;
