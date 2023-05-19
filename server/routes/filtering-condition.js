@@ -3,54 +3,53 @@ const router = express.Router();
 const client = require('../connection/db.js');
 
 //filter data with data validation
-router.post("/filterData" , async (req, res )=> {
-    const data = req.body;
-    console.log(data);
-   
-  
-    function generateQuery(tableName,conditionsObject) {
-      let query = `SELECT * FROM ${tableName} `;
-  
-      if(conditionsObject && Object.keys(conditionsObject).length>0){
-        query += ' WHERE ';
-        const condition = [];
-  
+router.post("/filterData", async (req, res) => {
+  const data = req.body;
+  console.log(data);
+
+
+  function generateQuery(tableName, conditionsObject) {
+    let query = `SELECT *,CAST(dob AS char(10)) AS dob FROM ${tableName} `;
+    if (conditionsObject && Object.keys(conditionsObject).length > 0) {
+      query += ' WHERE ';
+      const condition = [];
+
       for (const key in conditionsObject) {
         const value = conditionsObject[key];
 
         if (value.params.length == 0) // filter not provided for a given case.
-            continue;
-        if (value.operator=== "IN") {
+          continue;
+        if (value.operator === "IN") {
           condition.push(`${value.column} ${value.operator} (${value.params.map(val => `'${val}'`).join(', ')})`);
-        } 
-        else if(value.operator === "BETWEEN"){
+        }
+        else if (value.operator === "BETWEEN") {
           console.log("hello between")
           if(value.column==="experience"){
             condition.push(`(date_part ('years', age(current_date, "createdAt"))) + coalesce(${value.column}, 0) ${value.operator} ${value.params.min} AND ${value.params.max}`)
           }
-          if(value.column==="dob"){
+          if (value.column === "dob") {
             condition.push(`date_part('years', age(current_date, dob)) ${value.operator} ${value.params.min} AND ${value.params.max}`);
-            }
-          
+          }
+
         }
-    }
-      
+      }
+
       query += condition.join(' AND ');
-      }
-      return query;
     }
-    const selectQuery = generateQuery("applicant_iteration_master",data)
-    console.log(selectQuery)
-    client.query(selectQuery, (error, result) => {
-      if(error){
-        console.log(error);
-        res.status(403).send(error);
+    return query;
+  }
+  const selectQuery = generateQuery("applicant_iteration_master", data)
+  console.log(selectQuery)
+  client.query(selectQuery, (error, result) => {
+    if (error) {
+      console.log(error);
+      res.status(403).send(error);
     }
-    else{
-        res.status(200).send(result.rows);
-      }
-    })
-  
-  
-  });
-  module.exports = router;
+    else {
+      res.status(200).send(result.rows);
+    }
+  })
+
+
+});
+module.exports = router;
