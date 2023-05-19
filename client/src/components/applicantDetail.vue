@@ -122,6 +122,7 @@ export default {
         .catch((error) => {
           console.log(error);
         });
+      this.$refs.filterBoxBtn.click();
     },
 
     search() {
@@ -138,7 +139,6 @@ export default {
         .catch((error) => {
           console.log(error);
         });
-      this.$refs.filterBoxBtn.click();
     },
   },
   mounted() {

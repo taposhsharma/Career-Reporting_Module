@@ -29,7 +29,7 @@ router.post("/filterData", async (req, res) => {
           }
           if (value.column === "dob") {
             condition.push(`date_part('years', age(current_date, dob)) ${value.operator} ${value.params.min} AND ${value.params.max}`);
-          }
+          } 
 
         }
       }
