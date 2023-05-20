@@ -6,31 +6,30 @@
 
     <div class="operations">
       <div class="search-filter">
-        
-      <div class="input-group">
-        <input
-          type="text"
-          class="form-control"
-          placeholder="Search"
-          v-model="searchedText"
-        />
-        <div class="input-group-append">
-          <button class="btn btn-secondary" type="button" @click="search()">
-            Search
-          </button>
+        <div class="input-group">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Search"
+            v-model="searchedText"
+          />
+          <div class="input-group-append">
+            <button class="btn btn-secondary" type="button" @click="search()">
+              Search
+            </button>
+          </div>
         </div>
-      </div>
-      <button
-        class="btn btn-primary"
-        type="button"
-        data-toggle="collapse"
-        data-target="#collapseFilters"
-        aria-expanded="false"
-        aria-controls="collapseFilters"
-        ref="filterBoxBtn"
-      >
-        Filter
-      </button>
+        <button
+          class="btn btn-primary"
+          type="button"
+          data-toggle="collapse"
+          data-target="#collapseFilters"
+          aria-expanded="false"
+          aria-controls="collapseFilters"
+          ref="filterBoxBtn"
+        >
+          Filter
+        </button>
       </div>
       <div class="dropdown show">
         <span
@@ -80,16 +79,17 @@
     <table class="table table-striped" v-if="computedApplicants.length != 0">
       <thead>
         <tr>
-          <th scope="col">Name</th>
-          <th scope="col">Position</th>
-          <th scope="col">Experience</th>
-          <th scope="col">Relevant Experience</th>
-          <th scope="col">Gender</th>
-          <th scope="col">Location</th>
-          <th scope="col">Application Status</th>
-          <th scope="col">Email</th>
-          <th scope="col">Mobile</th>
-          <th scope="col">DOB</th>
+          <th v-for="heading in headings" :key="heading">
+            <div class="h4 mb-0">
+              <b-icon icon="arrow-up" @click="sortAsc(heading)"></b-icon>
+              <b-icon icon="arrow-down" @click="sortDes(heading)"></b-icon>
+            </div>
+          </th>
+        </tr>
+        <tr>
+          <th v-for="heading in headings" :key="heading" scope="col">
+            {{ heading }}
+          </th>
         </tr>
       </thead>
       <tbody>
@@ -132,6 +132,18 @@ export default {
       currentPage: 1,
       perPage: 50,
       searchedText: "",
+      headings: [
+        "Name",
+        "Position",
+        "Experience",
+        "Relevant Experience",
+        "Gender",
+        "Location",
+        "Application Status",
+        "Email",
+        "Mobile",
+        "DOB",
+      ],
     };
   },
   computed: {
@@ -177,6 +189,18 @@ export default {
           console.log(error);
         });
     },
+    sortAsc(heading) {
+      axios
+        .post("http://localhost:5000/data/sort", { heading, order: "asc" })
+        .then((res) => (this.applicants = res.data))
+        .catch((err) => console.log(err));
+    },
+    sortDes(heading) {
+      axios
+        .post("http://localhost:5000/data/sort", { heading, order: "desc" })
+        .then((res) => (this.applicants = res.data))
+        .catch((err) => console.log(err));
+    },
   },
   mounted() {
     const url = `http://localhost:5000/data/filterData`;
@@ -221,14 +245,17 @@ export default {
 .operations input {
   width: 50%;
 }
-.search-filter{
+.search-filter {
   display: flex;
   width: 50%;
   margin-left: 335px;
   margin-right: auto;
 }
-.dropdown.show{
+.dropdown.show {
   margin-left: auto;
+}
+.b-icon{
+  cursor: pointer;
 }
 .table {
   margin: 0;
