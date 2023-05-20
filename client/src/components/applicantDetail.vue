@@ -104,15 +104,6 @@ export default {
   }
   },
   methods: {
-    // handlePageChange(newPage) {
-    //   // Update your data or fetch new data based on the newPage value
-    //   // For example, you can make an API request here to fetch the data for the new page
-    //   this.$router.push({
-    //     path: "/",
-    //     query: { page: newPage, limit: 20 },
-    //   });
-    //   console.log("Page changed to:", newPage);
-    // },
     applyFilters(filterOpts ){
       console.log(filterOpts);
       axios.post('http://localhost:5000/data/filterData', filterOpts)
