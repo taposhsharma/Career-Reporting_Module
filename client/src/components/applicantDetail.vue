@@ -35,13 +35,53 @@
         <filterComponent @filters="applyFilters"></filterComponent>
       </div>
     </div>
-    <table class="table table-striped" v-if="computedApplicants.length != 0">
+    <div class="text-right p-3">
+      <div class="dropdown show">
+        <span
+          class="btn btn-primary dropdown-toggle"
+          href="#"
+          role="button"
+          id="dropdownMenuLink"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
+          View per Page: {{ perPage }}
+        </span>
+
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+          <span
+            class="dropdown-item font-weight-bold text-center"
+            @click="perPage = 50"
+            >50</span
+          >
+          <span
+            class="dropdown-item font-weight-bold text-center"
+            @click="perPage = 100"
+            >100</span
+          >
+          <span
+            class="dropdown-item font-weight-bold text-center"
+            @click="perPage = 150"
+            >150</span
+          >
+          <span
+            class="dropdown-item font-weight-bold text-center"
+            @click="perPage = 200"
+            >200</span
+          >
+        </div>
+      </div>
+    </div>
+    <table class="table table-striped">
       <thead>
         <tr>
           <th scope="col">Name</th>
           <th scope="col">Position</th>
           <th scope="col">Exprience</th>
           <th scope="col">Relevant Experience</th>
+          <th class="col">Gender</th>
+          <th class="col">Location</th>
           <th scope="col">Application Status</th>
           <th scope="col">Email</th>
           <th scope="col">Mobile</th>
@@ -54,6 +94,8 @@
           <td>{{ applicant.position }}</td>
           <td>{{ applicant.experience }}</td>
           <td>{{ applicant.relevant_experience }}</td>
+          <td>{{ applicant.gender }}</td>
+          <td>{{ applicant.city }}</td>
           <td>{{ applicant.application_status }}</td>
           <td>{{ applicant.email }}</td>
           <td>{{ applicant.mobile_no }}</td>
@@ -84,8 +126,7 @@ export default {
     return {
       applicants: [],
       currentPage: 1,
-      perPage: 10,
-      total_pages: 0,
+      perPage: 50,
       searchedText: "",
     };
   },
@@ -93,23 +134,39 @@ export default {
     totalItems() {
       return this.applicants.length;
     },
-    computedApplicants(){
-      if (!this.applicants) return []
+    computedApplicants() {
+      if (!this.applicants) return [];
       else {
-        const firstIndex = (this.currentPage - 1) * this.perPage
-        const lastIndex = this.currentPage * this.perPage
+        const firstIndex = (this.currentPage - 1) * this.perPage;
+        const lastIndex = this.currentPage * this.perPage;
 
-        return this.applicants.slice(firstIndex, lastIndex)
-    }
-  }
+        return this.applicants.slice(firstIndex, lastIndex);
+      }
+    },
   },
   methods: {
-    applyFilters(filterOpts ){
+    applyFilters(filterOpts) {
       console.log(filterOpts);
-      axios.post('http://localhost:5000/data/filterData', filterOpts)
+      axios
+        .post("http://localhost:5000/data/filterData", filterOpts)
+        .then((response) => {
+          console.log(response.data);
+          this.applicants = response.data;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      this.$refs.filterBoxBtn.click();
+    },
+    search(){
+      console.log(this.searchedText);
+      const text = [this.searchedText];
+      console.log(typeof(text));
+      const url = 'http://localhost:5000/data/search';
+      axios.post(url, text)
       .then((response) => {
-        console.log(response.data);
-        this.applicants = response.data
+        console.log(response);
+        this.applicants = response.data;
       })
       .catch((error) => {
         console.log(error);
@@ -132,15 +189,21 @@ export default {
     },
   },
   mounted() {
-    const url = "http://localhost:5000/data/allData";
+    const url = `http://localhost:5000/data/filterData`;
     axios
-      .get(url)
+      .post(url, [])
       .then((response) => {
-        console.log(response.data.rows);
-        this.applicants = [...response.data.rows];
-        console.log(this.applicants.length);
+        if (response.status == 200) {
+          console.log(response.data);
+          this.applicants = response.data;
+        } else {
+          console.log("error");
+          console.log(response.data);
+        }
       })
-      .catch((error) => console.log("Error-", error));
+      .catch((error) => {
+        console.log(error);
+      });
   },
 };
 </script>

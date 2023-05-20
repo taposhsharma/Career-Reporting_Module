@@ -320,18 +320,19 @@ export default {
     },
   },
   mounted() {
-    axios.get("http://localhost:5000/data/alldata").then((res) => {
-      this.data = res.data.rows;
-      for (let i = 0; i < this.data.length; i++) {
-        if (this.data[i].position != null)
-          this.posOptions.push(this.data[i].position);
-        if (this.data[i].gender != null)
-          this.genderOptions.push(this.data[i].gender);
-        if (this.data[i].city != null) this.locOptions.push(this.data[i].city);
-        if (this.data[i].application_status != null)
-          this.statusOptions.push(this.data[i].application_status);
+    axios.get("http://localhost:5000/data/filterParams")
+    .then((res) => {
+      console.log(res.data);
+      for (let index in res.data[0]){
+        this.posOptions.push(res.data[0][index].position)
       }
-    });
+      for (let index in res.data[1]){
+        this.locOptions.push(res.data[1][index].city)
+      }
+      for (let index in res.data[2]){
+        this.statusOptions.push(res.data[2][index].application_status)
+      }
+    })
   },
 };
 </script>
