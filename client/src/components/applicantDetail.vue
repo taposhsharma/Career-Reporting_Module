@@ -35,7 +35,7 @@
         <filterComponent @filters="applyFilters"></filterComponent>
       </div>
     </div>
-    <table class="table table-striped">
+    <table class="table table-striped" v-if="computedApplicants.length != 0">
       <thead>
         <tr>
           <th scope="col">Name</th>
@@ -61,6 +61,7 @@
         </tr>
       </tbody>
     </table>
+    <h2 v-else>No data found</h2>
     <b-pagination
       v-model="currentPage"
       :total-rows="totalItems"
@@ -122,8 +123,22 @@ export default {
       .catch((error) => {
         console.log(error);
       })
-    }
-
+    },
+    search() {
+      console.log(this.searchedText);
+      const text = [this.searchedText];
+      console.log(typeof text);
+      const url = "http://localhost:5000/data/search";
+      axios
+        .post(url, text)
+        .then((response) => {
+          console.log(response);
+          this.applicants = response.data;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
   },
   mounted() {
     const url = "http://localhost:5000/data/allData";
