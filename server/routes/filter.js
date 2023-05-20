@@ -40,8 +40,6 @@ router.get('/filterParams', async (req, res) => {
         return res.status(200).send(filParams);
       }
     });
-    console.log(filParams);
-
     await client.query('COMMIT');
   }
   catch (err) {
