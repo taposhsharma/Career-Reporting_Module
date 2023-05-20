@@ -5,6 +5,8 @@
     </nav>
 
     <div class="operations">
+      <div class="search-filter">
+        
       <div class="input-group">
         <input
           type="text"
@@ -29,13 +31,7 @@
       >
         Filter
       </button>
-    </div>
-    <div class="collapse" id="collapseFilters">
-      <div class="card card-body">
-        <filterComponent @filters="applyFilters"></filterComponent>
       </div>
-    </div>
-    <div class="text-right p-3">
       <div class="dropdown show">
         <span
           class="btn btn-primary dropdown-toggle"
@@ -73,15 +69,23 @@
         </div>
       </div>
     </div>
-    <table class="table table-striped">
+    <div class="collapse" id="collapseFilters">
+      <div class="card card-body">
+        <filterComponent @filters="applyFilters"></filterComponent>
+      </div>
+    </div>
+    <!-- <div class="text-right p-3">
+      
+    </div> -->
+    <table class="table table-striped" v-if="computedApplicants.length != 0">
       <thead>
         <tr>
           <th scope="col">Name</th>
           <th scope="col">Position</th>
-          <th scope="col">Exprience</th>
+          <th scope="col">Experience</th>
           <th scope="col">Relevant Experience</th>
-          <th class="col">Gender</th>
-          <th class="col">Location</th>
+          <th scope="col">Gender</th>
+          <th scope="col">Location</th>
           <th scope="col">Application Status</th>
           <th scope="col">Email</th>
           <th scope="col">Mobile</th>
@@ -158,20 +162,6 @@ export default {
         });
       this.$refs.filterBoxBtn.click();
     },
-    search(){
-      console.log(this.searchedText);
-      const text = [this.searchedText];
-      console.log(typeof(text));
-      const url = 'http://localhost:5000/data/search';
-      axios.post(url, text)
-      .then((response) => {
-        console.log(response);
-        this.applicants = response.data;
-      })
-      .catch((error) => {
-        console.log(error);
-      })
-    },
     search() {
       console.log(this.searchedText);
       const text = [this.searchedText];
@@ -225,13 +215,24 @@ export default {
 .operations {
   margin: 8px auto;
   display: flex;
-  width: 55%;
+  justify-content: space-between;
+  width: 100%;
 }
 .operations input {
-  width: 55%;
+  width: 50%;
+}
+.search-filter{
+  display: flex;
+  width: 50%;
+  margin-left: 335px;
+  margin-right: auto;
+}
+.dropdown.show{
+  margin-left: auto;
 }
 .table {
-  margin: 0 auto;
+  margin: 0;
+  width: 100%;
   /* height: 300px; */
   /* overflow: auto; */
 }
@@ -240,7 +241,7 @@ th {
 }
 .card {
   margin: auto;
-  width: 55%;
+  width: 50%;
 }
 
 .search-bar {
