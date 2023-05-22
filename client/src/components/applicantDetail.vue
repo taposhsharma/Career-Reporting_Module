@@ -122,8 +122,8 @@
           <!-- <td> {{ index }} </td> -->
           <td>{{ applicant.first_name }} {{ applicant.last_name }}</td>
           <td>{{ applicant.position }}</td>
-          <td>{{ applicant.experience }}</td>
-          <td>{{ applicant.relevant_experience }}</td>
+          <td>{{ applicant.curr_experience }}</td>
+          <td>{{ applicant.curr_relevant_experience }}</td>
           <td>{{ applicant.gender }}</td>
           <td>{{ applicant.city }}</td>
           <td> {{ applicant.state }} </td>

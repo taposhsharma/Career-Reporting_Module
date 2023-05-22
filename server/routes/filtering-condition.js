@@ -14,7 +14,9 @@ router.post("/filterData", async (req, res) => {
 
 
   function generateQuery(tableName, conditionsObject) {
-    let query = `SELECT *,CAST(dob AS char(10)) AS datebirth, COALESCE(experience, 0) as experience, COALESCE(relevant_experience, 0) as relevant_experience FROM ${tableName} `;
+    let query = `SELECT *,CAST(dob AS char(10)) AS datebirth, (date_part ('years', age(current_date, "createdAt")) + COALESCE(experience, 0))
+     as curr_experience, (date_part ('years', age(current_date, "createdAt")) + COALESCE(relevant_experience, 0))
+      as curr_relevant_experience FROM ${tableName} `;
     if (conditionsObject && Object.keys(conditionsObject).length > 0) {
       query += ' WHERE ';
       const condition = [];
