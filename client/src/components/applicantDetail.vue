@@ -87,7 +87,7 @@
           </th>
         </tr>
         <tr>
-          <th v-for="heading in headings" :key="heading" scope="col">
+          <th v-for="heading in headings" :key="heading" scope="col" :class="{ 'sorted': sortColumn === heading }">
             {{ heading }}
           </th>
         </tr>
@@ -132,6 +132,7 @@ export default {
       currentPage: 1,
       perPage: 50,
       searchedText: "",
+      sortColumn: '',
       headings: [
         "Name",
         "Position",
@@ -190,12 +191,17 @@ export default {
         });
     },
     sortAsc(heading) {
+      this.sortColumn = heading;
       axios
         .post("http://localhost:5000/data/sort", { heading, order: "asc" })
-        .then((res) => (this.applicants = res.data))
+        .then((res) => {
+          this.applicants = res.data
+          
+          })
         .catch((err) => console.log(err));
     },
     sortDes(heading) {
+      this.sortColumn = heading;
       axios
         .post("http://localhost:5000/data/sort", { heading, order: "desc" })
         .then((res) => (this.applicants = res.data))
@@ -302,5 +308,8 @@ th {
 
 .search-bar button:hover {
   background-color: #495057;
+}
+th.sorted {
+  background-color: yellow;
 }
 </style>
