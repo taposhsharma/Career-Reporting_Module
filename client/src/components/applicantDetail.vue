@@ -5,37 +5,32 @@
     </nav>
 
     <div class="operations">
-      <div class="input-group">
-        <input
-          type="text"
-          class="form-control"
-          placeholder="Search"
-          v-model="searchedText"
-        />
-        <div class="input-group-append">
-          <button class="btn btn-secondary" type="button" @click="search()">
-            Search
-          </button>
+      <div class="search-filter">
+        <div class="input-group">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Search"
+            v-model="searchedText"
+          />
+          <div class="input-group-append">
+            <button class="btn btn-secondary" type="button" @click="search()">
+              Search
+            </button>
+          </div>
         </div>
+        <button
+          class="btn btn-primary"
+          type="button"
+          data-toggle="collapse"
+          data-target="#collapseFilters"
+          aria-expanded="false"
+          aria-controls="collapseFilters"
+          ref="filterBoxBtn"
+        >
+          Filter
+        </button>
       </div>
-      <button
-        class="btn btn-primary"
-        type="button"
-        data-toggle="collapse"
-        data-target="#collapseFilters"
-        aria-expanded="false"
-        aria-controls="collapseFilters"
-        ref="filterBoxBtn"
-      >
-        Filter
-      </button>
-    </div>
-    <div class="collapse" id="collapseFilters">
-      <div class="card card-body">
-        <filterComponent @filters="applyFilters"></filterComponent>
-      </div>
-    </div>
-    <div class="text-right p-3">
       <div class="dropdown show">
         <span
           class="btn btn-primary dropdown-toggle"
@@ -73,19 +68,28 @@
         </div>
       </div>
     </div>
-    <table class="table table-striped">
+    <div class="collapse" id="collapseFilters">
+      <div class="card card-body">
+        <filterComponent @filters="applyFilters"></filterComponent>
+      </div>
+    </div>
+    <!-- <div class="text-right p-3">
+      
+    </div> -->
+    <table class="table table-striped" v-if="computedApplicants.length != 0">
       <thead>
         <tr>
-          <th scope="col">Name</th>
-          <th scope="col">Position</th>
-          <th scope="col">Exprience</th>
-          <th scope="col">Relevant Experience</th>
-          <th class="col">Gender</th>
-          <th class="col">Location</th>
-          <th scope="col">Application Status</th>
-          <th scope="col">Email</th>
-          <th scope="col">Mobile</th>
-          <th scope="col">DOB</th>
+          <th v-for="heading in headings" :key="heading">
+            <div class="h4 mb-0">
+              <b-icon icon="arrow-up" @click="sortAsc(heading)"></b-icon>
+              <b-icon icon="arrow-down" @click="sortDes(heading)"></b-icon>
+            </div>
+          </th>
+        </tr>
+        <tr>
+          <th v-for="heading in headings" :key="heading" scope="col">
+            {{ heading }}
+          </th>
         </tr>
       </thead>
       <tbody>
@@ -103,6 +107,7 @@
         </tr>
       </tbody>
     </table>
+    <h2 v-else>No data found</h2>
     <b-pagination
       v-model="currentPage"
       :total-rows="totalItems"
@@ -127,6 +132,18 @@ export default {
       currentPage: 1,
       perPage: 50,
       searchedText: "",
+      headings: [
+        "Name",
+        "Position",
+        "Experience",
+        "Relevant Experience",
+        "Gender",
+        "Location",
+        "Application Status",
+        "Email",
+        "Mobile",
+        "DOB",
+      ],
     };
   },
   computed: {
@@ -157,20 +174,33 @@ export default {
         });
       this.$refs.filterBoxBtn.click();
     },
-    search(){
+    search() {
       console.log(this.searchedText);
       const text = [this.searchedText];
-      console.log(typeof(text));
-      const url = 'http://localhost:5000/data/search';
-      axios.post(url, text)
-      .then((response) => {
-        console.log(response);
-        this.applicants = response.data;
-      })
-      .catch((error) => {
-        console.log(error);
-      })
-    }
+      console.log(typeof text);
+      const url = "http://localhost:5000/data/search";
+      axios
+        .post(url, text)
+        .then((response) => {
+          console.log(response);
+          this.applicants = response.data;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    sortAsc(heading) {
+      axios
+        .post("http://localhost:5000/data/sort", { heading, order: "asc" })
+        .then((res) => (this.applicants = res.data))
+        .catch((err) => console.log(err));
+    },
+    sortDes(heading) {
+      axios
+        .post("http://localhost:5000/data/sort", { heading, order: "desc" })
+        .then((res) => (this.applicants = res.data))
+        .catch((err) => console.log(err));
+    },
   },
   mounted() {
     const url = `http://localhost:5000/data/filterData`;
@@ -209,13 +239,27 @@ export default {
 .operations {
   margin: 8px auto;
   display: flex;
-  width: 55%;
+  justify-content: space-between;
+  width: 100%;
 }
 .operations input {
-  width: 55%;
+  width: 50%;
+}
+.search-filter {
+  display: flex;
+  width: 50%;
+  margin-left: 335px;
+  margin-right: auto;
+}
+.dropdown.show {
+  margin-left: auto;
+}
+.b-icon{
+  cursor: pointer;
 }
 .table {
-  margin: 0 auto;
+  margin: 0;
+  width: 100%;
   /* height: 300px; */
   /* overflow: auto; */
 }
@@ -224,7 +268,7 @@ th {
 }
 .card {
   margin: auto;
-  width: 55%;
+  width: 50%;
 }
 
 .search-bar {

@@ -42,8 +42,8 @@ router.post("/filterData", async (req, res) => {
     return query;
   }
   let selectQuery = generateQuery("applicant_iteration_master", data)
-  let pagingQuery = ` LIMIT ${limit} OFFSET ${offset}`
-  selectQuery += pagingQuery
+  // let pagingQuery = ` LIMIT ${limit} OFFSET ${offset}`
+  // selectQuery += pagingQuery
   console.log(selectQuery)
   client.query(selectQuery, (error, result) => {
     if (error) {
