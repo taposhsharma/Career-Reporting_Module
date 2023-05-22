@@ -7,7 +7,7 @@ router.get('/filterParams', async (req, res) => {
   try {
     console.log("Hello filter params");
     await client.query('BEGIN')
-    const queryPosition = `SELECT DISTINCT(position) FROM applicant_iteration_master ORDER BY position`;
+    const queryPosition = `SELECT DISTINCT(position) FROM applicant_iteration_master`;
     let filParams = []
 
     await client.query(queryPosition, (error, result) => {
@@ -19,7 +19,7 @@ router.get('/filterParams', async (req, res) => {
         filParams.push(result.rows)
       }
     });
-    const queryCity = `SELECT DISTINCT(city) FROM applicant_iteration_master WHERE city IS NOT NULL ORDER BY city`;
+    const queryCity = `SELECT DISTINCT(city) FROM applicant_iteration_master WHERE city IS NOT NULL`;
     await client.query(queryCity, (error, result) => {
       if (error) {
         console.log(error);
@@ -29,7 +29,7 @@ router.get('/filterParams', async (req, res) => {
         filParams.push(result.rows)
       }
     });
-    const queryStatus = `SELECT DISTINCT(application_status) FROM applicant_iteration_master ORDER BY application_status`
+    const queryStatus = `SELECT DISTINCT(application_status) FROM applicant_iteration_master`
     await client.query(queryStatus, (error, result) => {
       if (error) {
         console.log(error);
