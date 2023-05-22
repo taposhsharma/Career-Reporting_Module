@@ -7,6 +7,8 @@ router.post("/filterData", async (req, res) => {
   const data = req.body;
   const limit = req.query.limit
   const offset = (req.query.page - 1) * limit
+  const sortCol = req.query.sortCol
+  const order = req.query.order
   console.log(limit, offset);
   console.log(data);
 
@@ -42,8 +44,12 @@ router.post("/filterData", async (req, res) => {
     return query;
   }
   let selectQuery = generateQuery("applicant_iteration_master", data)
-  // let pagingQuery = ` LIMIT ${limit} OFFSET ${offset}`
-  // selectQuery += pagingQuery
+  let sortQuery = ` ORDER BY ${sortCol} ${order}`
+  if(sortCol && order){
+    selectQuery += sortQuery
+  }
+  let pagingQuery = ` LIMIT ${limit} OFFSET ${offset}`
+  selectQuery += pagingQuery
   console.log(selectQuery)
   client.query(selectQuery, (error, result) => {
     if (error) {
