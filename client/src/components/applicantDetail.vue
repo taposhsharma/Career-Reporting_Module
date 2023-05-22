@@ -132,7 +132,10 @@
         </tr>
       </tbody>
     </table>
-    <h2 v-else>No data found</h2>
+    <div v-else>
+      <h2>No data found</h2>
+       
+    </div>
     <!-- <b-pagination
       v-model="currentPage"
       :total-rows="totalItems"
@@ -151,6 +154,7 @@
         <span class="page-link" @click="nextPage()">Next</span>
       </li>
     </ul>
+
   </div>
 </template>
 
@@ -221,6 +225,7 @@ export default {
         .then((response) => {
           console.log(response.data);
           this.applicants = response.data;
+          
         })
         .catch((error) => {
           console.log(error);
