@@ -14,7 +14,7 @@ router.post("/filterData", async (req, res) => {
 
 
   function generateQuery(tableName, conditionsObject) {
-    let query = `SELECT *,CAST(dob AS char(10)) AS datebirth FROM ${tableName} `;
+    let query = `SELECT *,CAST(dob AS char(10)) AS datebirth, COALESCE(experience, 0) as experience, COALESCE(relevant_experience, 0) as relevant_experience FROM ${tableName} `;
     if (conditionsObject && Object.keys(conditionsObject).length > 0) {
       query += ' WHERE ';
       const condition = [];
@@ -47,11 +47,11 @@ router.post("/filterData", async (req, res) => {
   let sortQuery = ` ORDER BY ${sortCol} ${order}`;
   if(sortCol == 'first_name, last_name')
   {
-    sortQuery = `ORDER BY first_name ${order}, last_name ${order}`;
+    sortQuery = ` ORDER BY first_name ${order}, last_name ${order}`;
   }
   else if(sortCol == 'experience' || sortCol == 'relevant_experience')
   {
-    sortQuery = `ORDER BY (date_part('years', age(current_date, "createdAt")) + COALESCE(${sortCol}, 0)) ${order}`;
+    sortQuery = ` ORDER BY (date_part('years', age(current_date, "createdAt")) + COALESCE(${sortCol}, 0)) ${order}`;
   }
   if(sortCol && order){
     selectQuery += sortQuery
