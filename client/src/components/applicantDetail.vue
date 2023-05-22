@@ -47,22 +47,22 @@
         <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
           <span
             class="dropdown-item font-weight-bold text-center"
-            @click="perPage = 50"
+            @click="changePerPage(50)"
             >50</span
           >
           <span
             class="dropdown-item font-weight-bold text-center"
-            @click="perPage = 100"
+            @click="changePerPage(100)"
             >100</span
           >
           <span
             class="dropdown-item font-weight-bold text-center"
-            @click="perPage = 150"
+            @click="changePerPage(150)"
             >150</span
           >
           <span
             class="dropdown-item font-weight-bold text-center"
-            @click="perPage = 200"
+            @click="changePerPage(200)"
             >200</span
           >
         </div>
@@ -79,10 +79,16 @@
     <table class="table table-striped" v-if="computedApplicants.length != 0">
       <thead>
         <tr>
-          <th v-for="heading in headings" :key="heading">
+          <!-- <th v-for="heading in headings" :key="heading">
             <div class="h4 mb-0">
               <b-icon icon="arrow-up" @click="sortAsc(heading)"></b-icon>
               <b-icon icon="arrow-down" @click="sortDes(heading)"></b-icon>
+            </div>
+          </th> -->
+          <th v-for="column in columns" :key="column">
+            <div class="h4 mb-0">
+              <b-icon icon="arrow-up" @click="sortAs(column, 'asc')"></b-icon>
+              <b-icon icon="arrow-down" @click="sortAs(column, 'desc')"></b-icon>
             </div>
           </th>
         </tr>
@@ -132,6 +138,7 @@ export default {
       currentPage: 1,
       perPage: 50,
       searchedText: "",
+      filterParams: [],
       headings: [
         "Name",
         "Position",
@@ -144,6 +151,20 @@ export default {
         "Mobile",
         "DOB",
       ],
+      columns: [
+        "first_name, last_name",
+        "position",
+        "experience",
+        "relevant_experience",
+        "gender",
+        "city",
+        "application_status",
+        "email",
+        "mobile_no",
+        "dob"
+      ],
+      sortCol: '',
+      sortOrder: ''
     };
   },
   computed: {
@@ -161,10 +182,10 @@ export default {
     },
   },
   methods: {
-    applyFilters(filterOpts) {
-      console.log(filterOpts);
+    callData(){
+      const url = `http://localhost:5000/data/filterData?limit=${this.perPage}&page=${this.currentPage}&sortCol=${this.sortCol}&order=${this.sortOrder}`
       axios
-        .post("http://localhost:5000/data/filterData", filterOpts)
+        .post(url,this.filterParams)
         .then((response) => {
           console.log(response.data);
           this.applicants = response.data;
@@ -172,7 +193,23 @@ export default {
         .catch((error) => {
           console.log(error);
         });
+    },
+    sortAs(column, order){
+      this.sortCol = column,
+      this.sortOrder = order,
+      this.callData()
+    },
+    applyFilters(filterOpts) {
+      console.log(filterOpts);
+      this.currentPage = 1
+      this.filterParams = [...filterOpts]
+      console.log("2",this.filterParams)
+      this.callData()
       this.$refs.filterBoxBtn.click();
+    },
+    changePerPage(pageLimit){
+      this.perPage = pageLimit
+      this.callData()
     },
     search() {
       console.log(this.searchedText);
@@ -189,35 +226,38 @@ export default {
           console.log(error);
         });
     },
-    sortAsc(heading) {
-      axios
-        .post("http://localhost:5000/data/sort", { heading, order: "asc" })
-        .then((res) => (this.applicants = res.data))
-        .catch((err) => console.log(err));
-    },
-    sortDes(heading) {
-      axios
-        .post("http://localhost:5000/data/sort", { heading, order: "desc" })
-        .then((res) => (this.applicants = res.data))
-        .catch((err) => console.log(err));
-    },
+    // sortAsc(heading) {
+    //   axios
+    //     .post("http://localhost:5000/data/sort", { heading, order: "asc" })
+    //     .then((res) => (this.applicants = res.data))
+    //     .catch((err) => console.log(err));
+    // },
+    // sortDes(heading) {
+    //   axios
+    //     .post("http://localhost:5000/data/sort", { heading, order: "desc" })
+    //     .then((res) => (this.applicants = res.data))
+    //     .catch((err) => console.log(err));
+    // },
   },
   mounted() {
-    const url = `http://localhost:5000/data/filterData`;
-    axios
-      .post(url, [])
-      .then((response) => {
-        if (response.status == 200) {
-          console.log(response.data);
-          this.applicants = response.data;
-        } else {
-          console.log("error");
-          console.log(response.data);
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    this.perPage = 50
+    this.currentPage = 1
+    // const url = `http://localhost:5000/data/filterData?limit=${this.perPage}&page=${this.currentPage}`;
+    // axios
+    //   .post(url, [])
+    //   .then((response) => {
+    //     if (response.status == 200) {
+    //       console.log(response.data);
+    //       this.applicants = response.data;
+    //     } else {
+    //       console.log("error");
+    //       console.log(response.data);
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   });
+    this.callData()
   },
 };
 </script>
