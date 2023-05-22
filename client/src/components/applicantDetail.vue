@@ -119,22 +119,23 @@
       </thead>
       <tbody>
         <tr v-for="applicant in applicants" :key="applicant.id">
+          <!-- <td> {{ index }} </td> -->
           <td>{{ applicant.first_name }} {{ applicant.last_name }}</td>
           <td>{{ applicant.position }}</td>
           <td>{{ applicant.experience }}</td>
           <td>{{ applicant.relevant_experience }}</td>
           <td>{{ applicant.gender }}</td>
           <td>{{ applicant.city }}</td>
+          <td> {{ applicant.state }} </td>
           <td>{{ applicant.application_status }}</td>
           <td>{{ applicant.email }}</td>
           <td>{{ applicant.mobile_no }}</td>
-          <td>{{ applicant.dob }}</td>
+          <td>{{ applicant.datebirth }}</td>
         </tr>
       </tbody>
     </table>
     <div v-else>
       <h2>No data found</h2>
-       
     </div>
     <!-- <b-pagination
       v-model="currentPage"
@@ -181,7 +182,8 @@ export default {
         "Experience",
         "Relevant Experience",
         "Gender",
-        "Location",
+        "City",
+        "State",
         "Application Status",
         "Email",
         "Mobile",
@@ -194,6 +196,7 @@ export default {
         "relevant_experience",
         "gender",
         "city",
+        "state",
         "application_status",
         "email",
         "mobile_no",

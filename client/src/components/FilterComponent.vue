@@ -65,11 +65,11 @@
       </div>
     </div> -->
     <div class="row m-1">
-      <div class="col-4">Location</div>
+      <div class="col-4">State</div>
       <div class="col-8">
         <multiselect
           v-model="selectedLoc"
-          placeholder="Search or add a city"
+          placeholder="Search or add a state"
           :options="Array.from(new Set(this.locOptions))"
           :multiple="true"
           :taggable="true"
@@ -279,7 +279,7 @@ export default {
       if (this.selectedLoc.length) {
         filterOpts.push({
           operator: "IN",
-          column: "city",
+          column: "state",
           params: this.selectedLoc,
         });
       }
@@ -327,7 +327,7 @@ export default {
         this.posOptions.push(res.data[0][index].position)
       }
       for (let index in res.data[1]){
-        this.locOptions.push(res.data[1][index].city)
+        this.locOptions.push(res.data[1][index].state)
       }
       for (let index in res.data[2]){
         this.statusOptions.push(res.data[2][index].application_status)
