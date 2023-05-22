@@ -267,7 +267,7 @@ export default {
       console.log(this.searchedText);
       const text = [this.searchedText];
       console.log(typeof text);
-      const url = "http://localhost:5000/data/search";
+      const url = `http://localhost:5000/data/search?limit=${this.perPage}&page=${this.currentPage}`;
       axios
         .post(url, text)
         .then((response) => {

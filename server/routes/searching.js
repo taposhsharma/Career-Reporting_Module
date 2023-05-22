@@ -7,11 +7,18 @@ router.post('/search', async (req, res) => {
     try{
       console.log(req.body);
       const searchedText = req.body[0];
+      let { limit, page } = req.query;
+      let offset = (page - 1) * limit;
     //   console.log(searchedText);
-      const query = `SELECT *,CAST(dob AS char(10)) AS datebirth, (date_part ('years', age(current_date, "createdAt")) + COALESCE(experience, 0))
+      let query = `SELECT *,CAST(dob AS char(10)) AS datebirth, (date_part ('years', age(current_date, "createdAt")) + COALESCE(experience, 0))
       as curr_experience, (date_part ('years', age(current_date, "createdAt")) + COALESCE(relevant_experience, 0))
        as curr_relevant_experience FROM applicant_iteration_master 
       WHERE first_name LIKE '%${searchedText}%' OR last_name LIKE '%${searchedText}%' OR email LIKE '%${searchedText}%'`;
+      if(limit && page)
+      {
+        const limitQuery = ` LIMIT ${limit} OFFSET ${offset}`;
+        query += limitQuery;
+      }
       console.log(query);
       await client.query(query, (error, result) => {
         if(error)
