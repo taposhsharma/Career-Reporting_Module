@@ -81,8 +81,8 @@
         <tr>
           <th v-for="heading in headings" :key="heading">
             <div class="h4 mb-0">
-              <b-icon icon="arrow-up" @click="sortAsc(heading)"></b-icon>
-              <b-icon icon="arrow-down" @click="sortDes(heading)"></b-icon>
+              <b-icon icon="arrow-up" @click="sortAsc(heading)" :style="{ boxShadow: getBoxShadow(heading, 'asc') }"></b-icon>
+              <b-icon icon="arrow-down" @click="sortDes(heading)" :style="{ boxShadow: getBoxShadow(heading, 'desc') }"></b-icon>
             </div>
           </th>
         </tr>
@@ -133,6 +133,7 @@ export default {
       perPage: 50,
       searchedText: "",
       sortColumn: '',
+      sortDirection : '',
       headings: [
         "Name",
         "Position",
@@ -192,6 +193,7 @@ export default {
     },
     sortAsc(heading) {
       this.sortColumn = heading;
+      this.sortDirection = 'asc';
       axios
         .post("http://localhost:5000/data/sort", { heading, order: "asc" })
         .then((res) => {
@@ -202,11 +204,19 @@ export default {
     },
     sortDes(heading) {
       this.sortColumn = heading;
+      this.sortDirection = 'desc';
       axios
         .post("http://localhost:5000/data/sort", { heading, order: "desc" })
         .then((res) => (this.applicants = res.data))
         .catch((err) => console.log(err));
     },
+    getBoxShadow(heading, direction) {
+    if (heading === this.sortColumn && direction === this.sortDirection) {
+      return '0 2px 4px rgba(0, 0, 0, 0.8)'; // Selected heading with the corresponding sorting direction
+    } else {
+      return ''; // Empty string for other headings
+    }
+  },
   },
   mounted() {
     const url = `http://localhost:5000/data/filterData`;
@@ -311,5 +321,12 @@ th {
 }
 th.sorted {
   background-color: yellow;
+}
+.box-shadow-up {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Box shadow style for ascending sorting */
+}
+
+.box-shadow-down {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4); /* Box shadow style for descending sorting */
 }
 </style>
