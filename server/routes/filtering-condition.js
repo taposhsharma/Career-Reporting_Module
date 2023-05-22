@@ -44,7 +44,11 @@ router.post("/filterData", async (req, res) => {
     return query;
   }
   let selectQuery = generateQuery("applicant_iteration_master", data)
-  let sortQuery = ` ORDER BY ${sortCol} ${order}`
+  let sortQuery = ` ORDER BY ${sortCol} ${order}`;
+  if(sortCol == 'first_name, last_name')
+  {
+    sortQuery = `ORDER BY first_name ${order}, last_name ${order}`;
+  }
   if(sortCol && order){
     selectQuery += sortQuery
   }
