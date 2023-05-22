@@ -19,7 +19,7 @@ router.get('/filterParams', async (req, res) => {
         filParams.push(result.rows)
       }
     });
-    const queryCity = `SELECT DISTINCT(city) FROM applicant_iteration_master WHERE city IS NOT NULL`;
+    const queryCity = `SELECT DISTINCT(state) FROM applicant_iteration_master WHERE city IS NOT NULL`;
     await client.query(queryCity, (error, result) => {
       if (error) {
         console.log(error);
